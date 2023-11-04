@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:redraven.Converters"
+             xmlns:contentViews="clr-namespace:redraven.ContentViews"
+             xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:viewModels="clr-namespace:redraven.ViewModels"
+             xmlns:models="clr-namespace:redraven.Models"
+             x:Class="redraven.Views.TrainingHistoryPage"
+             Title="TrainingHistoryPage" 
+             x:DataType="viewModels:TrainingHistoryViewModel"
+             Shell.TabBarIsVisible="False"
+             Shell.NavBarIsVisible="False"
+             >
+    <ContentPage.Resources>
+        <converters:UnixTimestampToDateTimeString x:Key="UnixTimestampToDateTimeString"></converters:UnixTimestampToDateTimeString>
+    </ContentPage.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid x:Name="NavigationGrid">
+            <contentViews:IconTextButton x:Name="GoBackButton" HorizontalOptions="Start" Text="Your plan" ImageSource="back.png" >
+                <contentViews:IconTextButton.Behaviors>
+                    <behaviors:EventToCommandBehavior
+                        EventName="ButtonOnClicked"
+                        Command="{Binding GoBackCommand}"/>
+                </contentViews:IconTextButton.Behaviors>
+            </contentViews:IconTextButton>
+        </Grid>
+        <Grid Grid.Row="1" x:Name="TitleOverviewGrid" VerticalOptions="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Margin="0,30">
+                <Label HorizontalTextAlignment="Center" Margin="30,0" Text="Workout History"  Style="{DynamicResource HeadingLabelOnPage}"/>
+                <contentViews:InfoTextWithIcon  Text="This week" ImageSource="calendar.png"></contentViews:InfoTextWithIcon>
+            </VerticalStackLayout>
+            <HorizontalStackLayout Margin="0,15,0,60" Grid.Row="1" HorizontalOptions="Center" Spacing="42">
+                <contentViews:VerticalBadgeIconText
+            ImageSource="weight_kilogram.png"
+            TitleText="{Binding TotalWeightString}"
+            DescriptionText="were lifted"
+            IsBadgeVisible="True"/>
+                <contentViews:VerticalBadgeIconText 
+            ImageSource="fire.png"
+            TitleText="{Binding TotalCaloriesString}"
+            DescriptionText="were burnt"
+            IsBadgeVisible="True"/>
+                <contentViews:VerticalBadgeIconText 
+            ImageSource="reps.png"
+            TitleText="{Binding TotalRepsString}"
+            DescriptionText="were repeated"
+            IsBadgeVisible="true"/>
+            </HorizontalStackLayout>
+        </Grid>
+        <Border Grid.Row="2" Style="{DynamicResource ContentHolderBorder}">
+            <Border.Shadow>
+                <Shadow Brush="{DynamicResource Surface}"
+                        Offset="0,-20"
+                        Radius="40"
+                        Opacity="0.8" />
+            </Border.Shadow>
+            <CollectionView Grid.Row="2" x:Name="TrainingHistoryCollectionView" ItemsSource="{Binding Trainings}" SelectionMode="Single" SelectionChanged="TrainingHistoryCollectionView_OnSelectionChanged">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <contentViews:InfoHolderListItem 
+                            Margin="26,20,23,0"
+                            IsImageVisible1="False"
+                            TitleText="{Binding Name}"
+                            x:DataType="models:TrainingDay"
+                            DescriptionText="{Binding UnixTimestamp, Converter={StaticResource UnixTimestampToDateTimeString}}"
+                            Grid.Column="0">
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="CommonStates">
+                                    <VisualState Name="Normal"></VisualState>
+                                    <VisualState Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="Transparent"></Setter>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </contentViews:InfoHolderListItem>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Border>
+    </Grid>
+</ContentPage>

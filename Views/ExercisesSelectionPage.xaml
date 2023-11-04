@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:contentViews="clr-namespace:redraven.ContentViews"
+             xmlns:models="clr-namespace:redraven.Models"
+             xmlns:viewModels="clr-namespace:redraven.ViewModels"
+             x:Class="redraven.Views.ExercisesSelectionPage"
+             Title="ExercisesSelectionPage"
+             x:DataType="viewModels:ExercisesSelectionViewModel">
+    <Grid Margin="30,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid Margin="-30,0,0,0" x:Name="NavigationGridSelectExercise">
+            <contentViews:IconTextButton ButtonOnClicked="IconTextButton_OnButtonOnClicked" Text="{Binding SelectedTrainingDay.Name}" ImageSource="back.png" ></contentViews:IconTextButton>
+        </Grid>
+
+        <VerticalStackLayout Grid.Row="1">
+            <Label Margin="0,10,0,0"
+                       HorizontalOptions="Center"
+                       HorizontalTextAlignment="Center"
+                       Style="{DynamicResource HeadingLabelOnPage}"
+                       Text="Select Exercise" />
+            <contentViews:UnderlineEntry TextColor="{DynamicResource White}" Padding="0,0,0,30" PlaceholderText="Search..." x:Name="SearchExerciseEntry" EntryUIOnTextChanged="SearchExerciseEntry_OnEntryUIOnTextChanged"  Grid.Row="1"></contentViews:UnderlineEntry>
+        </VerticalStackLayout>
+
+        <Border Margin="-30,0" Grid.Row="2" Style="{DynamicResource ContentHolderBorder}">
+            <Border.Shadow>
+                <Shadow Brush="{DynamicResource Surface}"
+                            Offset="0,-20"
+                            Radius="40"
+                            Opacity="0.8" />
+            </Border.Shadow>
+            <CollectionView x:Name="SelectExerciseCollectionView" Grid.Row="2" ItemsSource="{Binding Path=Exercises}" SelectionMode="Multiple">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Exercise">
+                        <Grid Padding="10" Margin="20,0">
+                            <Label Text="{Binding Name}"></Label>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="CommonStates">
+                                    <VisualState Name="Normal">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="Transparent"></Setter>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="{DynamicResource Primary}"></Setter>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                    <VisualState Name="Unselected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="Transparent"></Setter>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Border>
+
+        <contentViews:PrimaryIconTextButton x:Name="SelectExerciseButton" ButtonOnClicked="SelectExerciseButton_OnClicked" VerticalOptions="End" Margin="0,20" Text="Continue" Grid.Row="2" ImageSource="arrow_right.png" HorizontalOptions="Center"></contentViews:PrimaryIconTextButton>
+    </Grid>
+</ContentPage>

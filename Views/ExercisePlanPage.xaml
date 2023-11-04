@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:redraven.ViewModels"
+             xmlns:contentViews="clr-namespace:redraven.ContentViews"
+             xmlns:models="clr-namespace:redraven.Models"
+             xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:converters="clr-namespace:redraven.Converters"
+             x:Class="redraven.Views.ExercisePlanPage"
+             Title="ExercisePlanPage" Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
+             x:DataType="viewModels:ExercisePlanViewModel">
+    <ContentPage.Resources>
+        <behaviors:InvertedBoolConverter x:Key="InvertedBoolConverter"></behaviors:InvertedBoolConverter>
+        <converters:TrainingDayToTotalWeight x:Key="ExercisePlanToTotalWeight"></converters:TrainingDayToTotalWeight>
+        <converters:TrainingDayToTotalSets x:Key="ExercisePlanToTotalSets"></converters:TrainingDayToTotalSets>
+        <converters:TrainingDayToTotalReps x:Key="ExercisePlanToTotalReps"></converters:TrainingDayToTotalReps>
+        <converters:SetToString x:Key="SetToString"></converters:SetToString>
+        <converters:BoolToStrokeThickness x:Key="BoolToStrokeThickness"></converters:BoolToStrokeThickness>
+        <converters:ExercisePlanToExerciseNOfNString x:Key="ExercisePlanToExerciseNOfNString"></converters:ExercisePlanToExerciseNOfNString>
+        <converters:IntTimerToString x:Key="IntTimerToString"></converters:IntTimerToString>
+        <behaviors:VariableMultiValueConverter x:Key="AllBoolTrue" ConditionType="All"></behaviors:VariableMultiValueConverter>
+    </ContentPage.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid x:Name="NavigationGrid">
+            <contentViews:IconTextButton x:Name="GoBackButton" HorizontalOptions="Start" Text="Your plan" ImageSource="back.png" >
+                <contentViews:IconTextButton.Behaviors>
+                    <behaviors:EventToCommandBehavior
+                        EventName="ButtonOnClicked"
+                        Command="{Binding GoBackCommand}"/>
+                </contentViews:IconTextButton.Behaviors>
+            </contentViews:IconTextButton>
+            <HorizontalStackLayout VerticalOptions="Center" Margin="0,0,18,0" HorizontalOptions="End">
+                <Label  Style="{DynamicResource SmallLabel}" Text="{Binding ExercisePlan, Converter={StaticResource ExercisePlanToExerciseNOfNString}}"></Label>
+                <Label IsVisible="False" Text="  | "></Label>
+                <Image IsVisible="False" WidthRequest="28" HeightRequest="28" Margin="0,-8,0,-8" Source="finish.png" Background="Transparent">
+                    <Image.Behaviors>
+                        <behaviors:IconTintColorBehavior TintColor="#1FD9CD" />
+                    </Image.Behaviors>
+                    <Image.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding FinishWorkoutCommand}"/>
+                    </Image.GestureRecognizers>
+                </Image>
+            </HorizontalStackLayout>
+        </Grid>
+        <Grid Grid.Row="1" x:Name="TitleOverviewGrid" VerticalOptions="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Margin="0,30">
+                <Label HorizontalTextAlignment="Center" Margin="30,0" Text="{Binding ExercisePlan.Exercise.Name, Source={RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}}" Style="{DynamicResource HeadingLabelOnPage}"/>
+                <contentViews:InfoTextWithIcon IsVisible="{Binding IsCounting, Source={RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}}" Text="{Binding CountdownTime, Converter={StaticResource IntTimerToString}, Source={RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}}" ImageSource="timer.png"></contentViews:InfoTextWithIcon>
+            </VerticalStackLayout>
+            <HorizontalStackLayout Margin="0,15,0,60" Grid.Row="1" HorizontalOptions="Center" Spacing="42">
+                <contentViews:VerticalBadgeIconText
+                    ImageSource="weight_kilogram.png"
+                    TitleText="{Binding ExercisePlan, Converter={StaticResource ExercisePlanToTotalWeight}, Source={RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}}"
+                    DescriptionText="{Binding WeightDescriptionString, Source={RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}}"
+                    IsBadgeVisible="{Binding IsExerciseDone}"/>
+                <contentViews:VerticalBadgeIconText 
+                    ImageSource="set.png"
+                    TitleText="{Binding ExercisePlan, Converter={StaticResource ExercisePlanToTotalSets}, Source={RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}}"
+                    DescriptionText="{Binding SetDescriptionString, Source={RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}}"
+                    IsBadgeVisible="{Binding IsExerciseDone}"/>
+                <contentViews:VerticalBadgeIconText 
+                    ImageSource="reps.png"
+                    TitleText="{Binding ExercisePlan, Converter={StaticResource ExercisePlanToTotalReps}, Source={RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}}"
+                    DescriptionText="{Binding RepsDescriptionString, Source={RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}}"
+                    IsBadgeVisible="{Binding IsExerciseDone}"/>
+            </HorizontalStackLayout>
+        </Grid>
+
+        <Border Grid.Row="2" Style="{DynamicResource ContentHolderBorder}">
+            <Border.Shadow>
+                <Shadow Brush="{DynamicResource Surface}"
+                        Offset="0,-20"
+                        Radius="40"
+                        Opacity="0.8" />
+            </Border.Shadow>
+            <ScrollView Margin="0,0,0,92">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <CollectionView Grid.Row="0" VerticalOptions="Start" x:Name="SetCollectionView" ItemsSource="{Binding ExercisePlan.Sets, Source={RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}}">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Set">
+                                <contentViews:InfoHolderListItem 
+                                     Margin="26,20,26,0"
+                                     InfoSmallBoxText="{Binding Id}"
+                                     IsImageVisible1="{Binding IsSetDone}"
+                                     ImageSource1="check.png"
+                                     ImageSource2="edit.png"
+                                     StrokeThickness="{Binding IsCurrentSet, Converter={StaticResource BoolToStrokeThickness}}"
+                                     IsRightChevronVisible="False"
+                                     >
+                                    <contentViews:InfoHolderListItem.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding ShowSetOptionsCommand, Source={RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}}" CommandParameter="{Binding}"/>
+                                    </contentViews:InfoHolderListItem.GestureRecognizers>
+                                    <contentViews:InfoHolderListItem.IsImageVisible2>
+                                        <MultiBinding Converter="{StaticResource AllBoolTrue}">
+                                            <Binding Path="IsEditSet" />
+                                            <Binding Path="IsEditSetMode" Source="{RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}" />
+                                        </MultiBinding>
+                                    </contentViews:InfoHolderListItem.IsImageVisible2>
+                                    <contentViews:InfoHolderListItem.TitleText>
+                                        <MultiBinding Converter="{StaticResource SetToString}" ConverterParameter="Title">
+                                            <Binding Path="Weight" />
+                                            <Binding Path="Repetition" />
+                                        </MultiBinding>
+                                    </contentViews:InfoHolderListItem.TitleText>
+                                    <contentViews:InfoHolderListItem.DescriptionText>
+                                        <MultiBinding Converter="{StaticResource SetToString}" ConverterParameter="Description">
+                                            <Binding Path="Id" />
+                                            <Binding Path="Weight" />
+                                            <Binding Path="Repetition" />
+                                        </MultiBinding>
+                                    </contentViews:InfoHolderListItem.DescriptionText>
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup Name="CommonStates">
+                                            <VisualState Name="Normal"></VisualState>
+                                            <VisualState Name="Selected">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="Transparent"></Setter>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                </contentViews:InfoHolderListItem>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <contentViews:IconTextButton VerticalOptions="Start" Grid.Row="1" HeightRequest="50" Margin="10,8,0,8" Text="Add a new set" x:Name="AddNewSetButton" ImageSource="add.png" IsVisible="{Binding IsHistoryMode, Converter={StaticResource InvertedBoolConverter}, Source={RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}}">
+                        <contentViews:IconTextButton.Behaviors>
+                            <behaviors:EventToCommandBehavior
+                                EventName="ButtonOnClicked"
+                                Command="{Binding AddNewSetCommand}"/>
+                        </contentViews:IconTextButton.Behaviors>
+                    </contentViews:IconTextButton>
+                </Grid>
+            </ScrollView>
+        </Border>
+
+        <ScrollView Grid.Row="1" IsVisible="False">
+            <Grid VerticalOptions="Fill" Padding="10,0">
+                <VerticalStackLayout VerticalOptions="Fill">
+                    <HorizontalStackLayout>
+                        <Label MaximumWidthRequest="300"
+                            Style="{DynamicResource HeadingLabelOnPage}"
+                            Text="{Binding ExercisePlan.Exercise.Name, Source={RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}}"
+                            VerticalOptions="Start" 
+                            HorizontalOptions="Start" />
+
+                        <Border Background="{DynamicResource ContentHolderSurfaceBrush}" StrokeThickness="0" StrokeShape="RoundRectangle 50" HeightRequest="50" WidthRequest="50" IsVisible="{Binding IsCounting, Source={RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}}">
+                            <Label Style="{DynamicResource LabelOnLightContainer}" Text="{Binding CountdownTime, Source={RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}}"  HorizontalOptions="Center" VerticalOptions="Center"></Label>
+                        </Border>
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </Grid>
+        </ScrollView>
+
+        <contentViews:PrimaryIconTextButton x:Name="GoToNextExerciseButton" IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}, Path=IsSetDoneAndNextExerciseReady}" Grid.Row="2" HorizontalOptions="Center" VerticalOptions="End" Margin="0,0,0,30" Text="Next exercise" ImageSource="arrow_right.png">
+            <contentViews:PrimaryIconTextButton.Behaviors>
+                <behaviors:EventToCommandBehavior
+                    EventName="ButtonOnClicked"
+                    Command="{Binding GoToNextExerciseCommand}"/>
+            </contentViews:PrimaryIconTextButton.Behaviors>
+        </contentViews:PrimaryIconTextButton>
+
+        <contentViews:PrimaryIconTextButton x:Name="SummaryButton"  IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}, Path=IsSummaryMode}" Grid.Row="2" HorizontalOptions="Center" VerticalOptions="End" Margin="0,0,0,30" Text="Workout summary" ImageSource="summary.png">
+            <contentViews:PrimaryIconTextButton.Behaviors>
+                <behaviors:EventToCommandBehavior
+                    EventName="ButtonOnClicked"
+                    Command="{Binding GoToSummaryCommand}"/>
+            </contentViews:PrimaryIconTextButton.Behaviors>
+        </contentViews:PrimaryIconTextButton>
+
+        <!--INPUT CARD-->
+        <Border Grid.Row="2" IsVisible="{Binding Source={RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}, Path=IsSetInputAvailable}"  x:Name="SetInputCard" Loaded="SetInputCard_OnLoaded" Margin="10,0,10,-2" VerticalOptions="End" StrokeThickness="0" StrokeShape="RoundRectangle 28,28,0,0" Background="{DynamicResource ContentHolderSurfaceBrush}" BindingContext="{Binding CurrentSet, Source={RelativeSource AncestorType={x:Type viewModels:ExercisePlanViewModel}}}">
+            <Grid Padding="20" ColumnSpacing="20" x:DataType="models:Set">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <contentViews:UnderlineEntry Loaded="InputWeightUnderlineEntry_OnLoaded" x:Name="InputWeightUnderlineEntry" Keyboard="Numeric" VerticalOptions="Center" HeaderText="Weight" TextColor="{DynamicResource White}" PlaceholderText="{Binding Weight}" EntryUIOnTextChanged="InputWeightUnderlineEntry_OnEntryUIOnTextChanged"></contentViews:UnderlineEntry>
+                <contentViews:UnderlineEntry  TextColor="{DynamicResource White}" x:Name="InputRepUnderlineEntry" EntryUIOnTextChanged="InputRepUnderlineEntry_OnEntryUIOnTextChanged" Keyboard="Numeric" VerticalOptions="Center" Grid.Column="1" HeaderText="Reps" PlaceholderText="{Binding Repetition}"></contentViews:UnderlineEntry>
+                <ImageButton x:Name="SaveWeightRepButton" Clicked="SaveWeightRepButton_OnClicked" Grid.Column="2" Background="{DynamicResource PrimaryBrush}" HeightRequest="60" WidthRequest="60" Source="check.png" HorizontalOptions="End" Aspect="Center">
+                    <ImageButton.Clip>
+                        <EllipseGeometry Center="30,30"
+                                         RadiusX="30"
+                                         RadiusY="30" />
+                    </ImageButton.Clip>
+                </ImageButton>
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

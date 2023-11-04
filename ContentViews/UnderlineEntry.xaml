@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:contentViews="clr-namespace:redraven.ContentViews"
+             x:Class="redraven.ContentViews.UnderlineEntry" x:Name="this">
+    <VerticalStackLayout HorizontalOptions="Fill" BindingContext="{x:Reference this}">
+        <Label
+            HorizontalOptions="Start"
+            Text="{Binding HeaderText}" Style="{DynamicResource EntryHeader}"/>
+        <Entry TextColor="{Binding TextColor}" x:Name="EntryUI" Completed="Entry_OnCompleted" Margin="0,-8,0,0" Style="{DynamicResource NormalEntryOnLightSurface}" Text="{Binding Text}" Keyboard="{Binding Keyboard}" Placeholder="{Binding PlaceholderText}"/>
+        <Border Margin="-4,-8,-8,0" BackgroundColor="{DynamicResource Primary}" Stroke="Transparent" HeightRequest="8" StrokeShape="RoundRectangle 10"></Border>
+    </VerticalStackLayout>
+</ContentView>

@@ -1,0 +1,366 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="redraven.Views.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:redraven.Models"
+    xmlns:converters="clr-namespace:redraven.Converters"
+    xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:helper="clr-namespace:redraven.Helper"
+    xmlns:contentViews="clr-namespace:redraven.ContentViews"
+    xmlns:viewModel="clr-namespace:redraven.ViewModel"
+    Shell.NavBarIsVisible="False"
+    x:DataType="viewModel:MainViewModel"
+    Background="{DynamicResource Surface}">
+    <ContentPage.Resources>
+        <converters:ProgrammeToTodayExercisePlan x:Key="ProgrammeToTodayExercisePlan"></converters:ProgrammeToTodayExercisePlan>
+        <converters:UnixTimestampToDateTimeString x:Key="UnixTimestampToDateTimeString"></converters:UnixTimestampToDateTimeString>
+        <converters:TrainingDayToTotalVolume x:Key="TrainingDayToTotalVolume"></converters:TrainingDayToTotalVolume>
+        <converters:TrainingDayToHeightWithMaxValue x:Key="TrainingDayToHeightWithMaxValue"></converters:TrainingDayToHeightWithMaxValue>
+        <behaviors:IsListNullOrEmptyConverter x:Key="IsListNullOrEmpty"></behaviors:IsListNullOrEmptyConverter>
+        <behaviors:IsListNotNullOrEmptyConverter x:Key="IsListNotNullOrEmpty"></behaviors:IsListNotNullOrEmptyConverter>
+        <converters:DoubleArrayToThickness x:Key="DoubleArrayToThickness"></converters:DoubleArrayToThickness>
+        <converters:TrainingDayToTotalWeight x:Key="TrainingDayToTotalWeight"></converters:TrainingDayToTotalWeight>
+        <converters:TrainingDayToTotalReps x:Key="TrainingDayToTotalReps"></converters:TrainingDayToTotalReps>
+        <converters:TrainingDayToCalories x:Key="TrainingDayToCalories"></converters:TrainingDayToCalories>
+        <converters:TrainingDayToTotalWorkoutTime x:Key="TrainingDayToTotalWorkoutTime"></converters:TrainingDayToTotalWorkoutTime>
+        <behaviors:InvertedBoolConverter x:Key="InvertedBool"></behaviors:InvertedBoolConverter>
+    </ContentPage.Resources>
+    <ContentPage.Behaviors>
+        <behaviors:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
+    </ContentPage.Behaviors>
+    <ScrollView>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid Row="0" x:Name="UserGreetings" Margin="30,0">
+                <VerticalStackLayout>
+                    <!-- User's Greetings -->
+                    <Label Margin="0,20,0,0"
+                       HorizontalOptions="Start"
+                       Style="{DynamicResource SubHeadingLabelOnPage}"
+                       Text="Welcome back," />
+                    <Label Margin="0,-4,0,0"
+                       HorizontalOptions="Start"
+                       Style="{DynamicResource HeadingLabelOnPage}"
+                       Text="{Binding User.Name}" />
+                </VerticalStackLayout>
+            </Grid>
+            <Grid Grid.Row="1" x:Name="UpperContentGrid" HorizontalOptions="Fill" VerticalOptions="Fill">
+                <Grid.Triggers>
+                    <DataTrigger TargetType="Grid" Binding="{Binding Source={x:Reference PastWorkoutVerticalStackLayout}, Path=IsVisible}" Value="True">
+                        <Setter Property="Margin" Value="0,2,-800,0"></Setter>
+                    </DataTrigger>
+                    <DataTrigger TargetType="Grid" Binding="{Binding Source={x:Reference PastWorkoutVerticalStackLayout}, Path=IsVisible}" Value="False">
+                        <Setter Property="Margin" Value="0, 2, 30, 0"></Setter>
+                    </DataTrigger>
+                </Grid.Triggers>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <!-- User's Card -->
+                <Grid x:Name="UserGrid" Margin="30,0,0,0" MinimumWidthRequest="280">
+                    <Grid.Triggers>
+                        <DataTrigger TargetType="Grid" Binding="{Binding Source={x:Reference PastWorkoutVerticalStackLayout}, Path=IsVisible}" Value="True">
+                            <Setter Property="Grid.ColumnSpan" Value="1"></Setter>
+                        </DataTrigger>
+                        <DataTrigger TargetType="Grid" Binding="{Binding Source={x:Reference PastWorkoutVerticalStackLayout}, Path=IsVisible}" Value="False">
+                            <Setter Property="Grid.ColumnSpan" Value="2"></Setter>
+                        </DataTrigger>
+                    </Grid.Triggers>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"></RowDefinition>
+                        <RowDefinition Height="228"></RowDefinition>
+                        <RowDefinition Height="80"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.ColumnSpan="2" Grid.Row="0" Background="Transparent" ></Grid>
+                    <Border StrokeThickness="0" StrokeShape="RoundRectangle 30,30,0,0" Grid.ColumnSpan="2" Grid.Row="1"  Margin="0,0,0,-1">
+                        <Border.Background>
+                            <RadialGradientBrush>
+                                <GradientStop Color="{DynamicResource DarkGradientCenterColor}"
+                                          Offset="0.1" />
+                                <GradientStop Color="{DynamicResource DarkGradientCornerColor}"
+                                          Offset="1.0" />
+                            </RadialGradientBrush>
+                        </Border.Background>
+                        <VerticalStackLayout HorizontalOptions="End" Margin="0,12,12,0" Spacing="12">
+                            <contentViews:HorizontalIconText ImageSource="weight_kilogram.png"
+                                                             HorizontalOptions="End"
+                                                             DescriptionText="{Binding TrainingDay, Converter={StaticResource TrainingDayToTotalWeight}}"></contentViews:HorizontalIconText>
+                            <contentViews:HorizontalIconText ImageSource="reps.png"
+                                                             HorizontalOptions="End"
+                                                             DescriptionText="{Binding TrainingDay, Converter={StaticResource TrainingDayToTotalReps}}"></contentViews:HorizontalIconText>
+                            <contentViews:HorizontalIconText ImageSource="fire.png"
+                                                             HorizontalOptions="End"
+                                                             DescriptionText="{Binding TrainingDay, Converter={StaticResource TrainingDayToCalories}}"></contentViews:HorizontalIconText>
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border StrokeThickness="0" StrokeShape="RoundRectangle 0,0,30,30" Grid.ColumnSpan="2" Grid.Row="2" Background="{DynamicResource ContentHolderSurfaceBrush}">
+                        <VerticalStackLayout Margin="14,14,0,0">
+                            <Label Style="{DynamicResource SubHeadingLabelOnLightContainer}" Text="Your plan"></Label>
+                            <HorizontalStackLayout>
+                                <Label Style="{DynamicResource HeadingLabelOnLightContainer}" Text="{Binding TrainingDay.Name}"></Label>
+                                <Label Style="{DynamicResource HeadingLabelOnLightContainer}" Text="   ("></Label>
+                                <Label Style="{DynamicResource HeadingLabelOnLightContainer}" Text="{Binding TrainingDay, Converter={StaticResource TrainingDayToTotalWorkoutTime}}"></Label>
+                                <Label Style="{DynamicResource HeadingLabelOnLightContainer}" Text=")"></Label>
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Border>
+                    <Image Grid.RowSpan="2" Grid.ColumnSpan="2"
+                       HorizontalOptions="Start"
+                       Margin="{Binding User.ProfilePictureMargin, Converter={StaticResource DoubleArrayToThickness}}"
+                       Source="{Binding User.ProfilePictureFileName}"/>
+                    <ImageButton Margin="0,0,28,42" Grid.Column="1" Grid.RowSpan="3" x:Name="StartTrainingDayButton" VerticalOptions="End" HorizontalOptions="End" Background="{DynamicResource PrimaryBrush}" HeightRequest="60" WidthRequest="60" Source="dumbbell.png" Aspect="Center" Command="{Binding StartCurrentTrainingDayCommand}">
+                        <ImageButton.Clip>
+                            <EllipseGeometry Center="30,30"
+                                             RadiusX="30"
+                                             RadiusY="30" />
+                        </ImageButton.Clip>
+                    </ImageButton>
+                </Grid>
+                <!-- Past workout -->
+                <VerticalStackLayout x:Name="PastWorkoutVerticalStackLayout" VerticalOptions="End" Margin="12,0,0,0" Grid.Column="1" IsVisible="{Binding IsHistoryNullOrEmpty, Converter={StaticResource InvertedBool}}">
+                    <VerticalStackLayout.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="PastWorkoutClicked"/>
+                    </VerticalStackLayout.GestureRecognizers>
+                    <Label Opacity="0.5" Text="Past"></Label>
+                    <Label Opacity="0.5" Text="Workout"></Label>
+                    <Grid Opacity="0.5" Margin="-4,0,0,0" BackgroundColor="Transparent">
+                        <Image HorizontalOptions="Start" VerticalOptions="Start" Source="chevrondoubleright.png">
+                            <Image.Behaviors>
+                                <behaviors:IconTintColorBehavior TintColor="White" />
+                            </Image.Behaviors>
+                        </Image>
+                    </Grid>
+                    <!-- Past workout's Card -->
+                    <Border BindingContext="{Binding HistoryDay}" Opacity="0.5" StrokeThickness="0" StrokeShape="RoundRectangle 30" Background="{DynamicResource ContentHolderSurfaceBrush}">
+                        <VerticalStackLayout Padding="20" x:DataType="models:TrainingDay">
+                            <Label Style="{DynamicResource SubHeadingLabelOnLightContainer}" Text="{Binding UnixTimestamp, Converter={StaticResource UnixTimestampToDateTimeString}}"></Label>
+                            <Label Style="{DynamicResource HeadingLabelOnLightContainer}" Text="{Binding Name}"></Label>
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </Grid>
+            <Grid Margin="30,0,0,0" Row="2" x:Name="WeeklyChartText">
+                <VerticalStackLayout IsVisible="{Binding HistoryDays, Converter={StaticResource IsListNotNullOrEmpty}}">
+                    <!-- User's Greetings -->
+                    <Label Margin="0,20,0,0"
+                       HorizontalOptions="Start"
+                       Style="{DynamicResource SubHeadingLabelOnPage}"
+                       Text="Your week is" />
+                    <Label Margin="0,-4,0,0"
+                       HorizontalOptions="Start"
+                       Style="{DynamicResource HeadingLabelOnPage}"
+                       Text="Powerful" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout IsVisible="{Binding HistoryDays, Converter={StaticResource IsListNullOrEmpty}}">
+                    <!-- User's Greetings -->
+                    <Label Margin="0,20,0,0"
+                           HorizontalOptions="Start"
+                           Style="{DynamicResource SubHeadingLabelOnPage}"
+                           Text="Your week will be" />
+                    <Label Margin="0,-4,0,0"
+                           HorizontalOptions="Start"
+                           Style="{DynamicResource HeadingLabelOnPage}"
+                           Text="Powerful" />
+                </VerticalStackLayout>
+            </Grid>
+            <HorizontalStackLayout Spacing="4" Grid.Row="2" HorizontalOptions="End" VerticalOptions="End" Opacity="0.5" Margin="0,0,30,4">
+                <Image Source="chevron_left.png" IsVisible="False">
+                    <Image.Behaviors>
+                        <behaviors:IconTintColorBehavior TintColor="White" />
+                    </Image.Behaviors>
+                </Image>
+                <Label Text="Volume (in kg)" IsVisible="{Binding HistoryDays, Converter={StaticResource IsListNotNullOrEmpty}}"></Label>
+                <Image Source="chevron_right.png" IsVisible="False">
+                    <Image.Behaviors>
+                        <behaviors:IconTintColorBehavior TintColor="White" />
+                    </Image.Behaviors>
+                </Image>
+            </HorizontalStackLayout>
+            <Grid MinimumHeightRequest="186" Grid.Row="3" Margin="30,20,30,16" ColumnSpacing="12">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="12"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="12"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Border StrokeThickness="0" StrokeShape="RoundRectangle 30,30,0,0" Grid.ColumnSpan="9" Grid.Row="0"  Margin="0,0,0,0">
+                    <Border.Background>
+                        <RadialGradientBrush>
+                            <GradientStop Color="{DynamicResource DarkGradientCenterColor}"
+                               Offset="0.1" />
+                            <GradientStop Color="{DynamicResource DarkGradientCornerColor}"
+                               Offset="1.0" />
+                        </RadialGradientBrush>
+                    </Border.Background>
+                </Border>
+
+
+                <Grid Loaded="TrainingChart_OnLoaded" IsVisible="{Binding HistoryDays[0].Done}" Grid.Row="0" Margin="4,2" HorizontalOptions="Center" Grid.Column="1" VerticalOptions="End" RowSpacing="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto" ></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid HorizontalOptions="Center" Grid.Row="0" Margin="-20,0">
+                        <Label Text="{Binding HistoryDays[0], Converter={StaticResource TrainingDayToTotalVolume}, ConverterParameter=omit}" FontSize="12"></Label>
+                    </Grid>
+                    <Grid HorizontalOptions="Center" WidthRequest="12" VerticalOptions="End" Grid.Row="1" Background="{DynamicResource Primary}">
+                        <Grid.HeightRequest>
+                            <MultiBinding Converter="{StaticResource TrainingDayToHeightWithMaxValue}">
+                                <Binding Path="HistoryDays[0]"></Binding>
+                                <Binding Path="MaxHistoryValue"></Binding>
+                            </MultiBinding>
+                        </Grid.HeightRequest>
+                    </Grid>
+                </Grid>
+                <Label HorizontalOptions="Center" Grid.Column="1" Grid.Row="1" Text="Su"></Label>
+
+                <Grid IsVisible="{Binding HistoryDays[1].Done}" Grid.Row="0" Margin="4,2" HorizontalOptions="Center" Grid.Column="2" VerticalOptions="End" RowSpacing="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto" ></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid HorizontalOptions="Center" Grid.Row="0"  Margin="-20,0">
+                        <Label Text="{Binding HistoryDays[1], Converter={StaticResource TrainingDayToTotalVolume}, ConverterParameter=omit}" FontSize="12"></Label>
+                    </Grid>
+                    <Grid HorizontalOptions="Center" WidthRequest="12" VerticalOptions="End" Grid.Row="1" Background="{DynamicResource Primary}">
+                        <Grid.HeightRequest>
+                            <MultiBinding Converter="{StaticResource TrainingDayToHeightWithMaxValue}">
+                                <Binding Path="HistoryDays[1]"></Binding>
+                                <Binding Path="MaxHistoryValue"></Binding>
+                            </MultiBinding>
+                        </Grid.HeightRequest>
+                    </Grid>
+                </Grid>
+                <Label HorizontalOptions="Center" Grid.Column="2" Text="Mo" Grid.Row="1"></Label>
+
+                <Grid IsVisible="{Binding HistoryDays[2].Done}" Grid.Row="0" Margin="4,2" HorizontalOptions="Center" Grid.Column="3" VerticalOptions="End" RowSpacing="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto" ></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid HorizontalOptions="Center" Grid.Row="0"  Margin="-20,0">
+                        <Label Text="{Binding HistoryDays[2], Converter={StaticResource TrainingDayToTotalVolume}, ConverterParameter=omit}" FontSize="12"></Label>
+                    </Grid>
+                    <Grid HorizontalOptions="Center" WidthRequest="12" VerticalOptions="End" Grid.Row="1" Background="{DynamicResource Primary}">
+                        <Grid.HeightRequest>
+                            <MultiBinding Converter="{StaticResource TrainingDayToHeightWithMaxValue}">
+                                <Binding Path="HistoryDays[2]"></Binding>
+                                <Binding Path="MaxHistoryValue"></Binding>
+                            </MultiBinding>
+                        </Grid.HeightRequest>
+                    </Grid>
+                </Grid>
+                <Label HorizontalOptions="Center" Grid.Column="3" Grid.Row="1" Text="Tu"></Label>
+
+                <Grid IsVisible="{Binding HistoryDays[3].Done}" Grid.Row="0" Margin="4,2" HorizontalOptions="Center" Grid.Column="4" VerticalOptions="End" RowSpacing="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto" ></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid HorizontalOptions="Center" Grid.Row="0"  Margin="-20,0">
+                        <Label Text="{Binding HistoryDays[3], Converter={StaticResource TrainingDayToTotalVolume}, ConverterParameter=omit}" FontSize="12"></Label>
+                    </Grid>
+                    <Grid HorizontalOptions="Center" WidthRequest="12" VerticalOptions="End" Grid.Row="1" Background="{DynamicResource Primary}">
+                        <Grid.HeightRequest>
+                            <MultiBinding Converter="{StaticResource TrainingDayToHeightWithMaxValue}">
+                                <Binding Path="HistoryDays[3]"></Binding>
+                                <Binding Path="MaxHistoryValue"></Binding>
+                            </MultiBinding>
+                        </Grid.HeightRequest>
+                    </Grid>
+                </Grid>
+                <Label HorizontalOptions="Center" Grid.Column="4" Grid.Row="1" Text="We"></Label>
+
+                <Grid IsVisible="{Binding HistoryDays[4].Done}" Grid.Row="0" Margin="4,2" HorizontalOptions="Center" Grid.Column="5" VerticalOptions="End" RowSpacing="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto" ></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid HorizontalOptions="Center" Grid.Row="0"  Margin="-20,0">
+                        <Label Text="{Binding HistoryDays[4], Converter={StaticResource TrainingDayToTotalVolume}, ConverterParameter=omit}" FontSize="12"></Label>
+                    </Grid>
+                    <Grid HorizontalOptions="Center" WidthRequest="12" VerticalOptions="End" Grid.Row="1" Background="{DynamicResource Primary}">
+                        <Grid.HeightRequest>
+                            <MultiBinding Converter="{StaticResource TrainingDayToHeightWithMaxValue}">
+                                <Binding Path="HistoryDays[4]"></Binding>
+                                <Binding Path="MaxHistoryValue"></Binding>
+                            </MultiBinding>
+                        </Grid.HeightRequest>
+                    </Grid>
+                </Grid>
+                <Label HorizontalOptions="Center" Grid.Column="5" Grid.Row="1" Text="Th"></Label>
+
+                <Grid IsVisible="{Binding HistoryDays[5].Done}" Grid.Row="0" Margin="4,2" HorizontalOptions="Center" Grid.Column="6" VerticalOptions="End" RowSpacing="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto" ></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid HorizontalOptions="Center" Grid.Row="0" Margin="-20,0">
+                        <Label Text="{Binding HistoryDays[5], Converter={StaticResource TrainingDayToTotalVolume}, ConverterParameter=omit}" FontSize="12"></Label>
+                    </Grid>
+                    <Grid HorizontalOptions="Center" WidthRequest="12" VerticalOptions="End" Grid.Row="1" Background="{DynamicResource Primary}">
+                        <Grid.HeightRequest>
+                            <MultiBinding Converter="{StaticResource TrainingDayToHeightWithMaxValue}">
+                                <Binding Path="HistoryDays[5]"></Binding>
+                                <Binding Path="MaxHistoryValue"></Binding>
+                            </MultiBinding>
+                        </Grid.HeightRequest>
+                    </Grid>
+                </Grid>
+                <Label HorizontalOptions="Center" Grid.Column="6" Grid.Row="1" Text="Fr"></Label>
+
+                <Grid IsVisible="{Binding HistoryDays[6].Done}" Grid.Row="0" Margin="4,2" HorizontalOptions="Center" Grid.Column="7" VerticalOptions="End" RowSpacing="4">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto" ></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid HorizontalOptions="Center" Grid.Row="0" Margin="-20,0">
+                        <Label Text="{Binding HistoryDays[6], Converter={StaticResource TrainingDayToTotalVolume}, ConverterParameter=omit}" FontSize="12"></Label>
+                    </Grid>
+                    <Grid HorizontalOptions="Center" WidthRequest="12" VerticalOptions="End" Grid.Row="1" Background="{DynamicResource Primary}">
+                        <Grid.HeightRequest>
+                            <MultiBinding Converter="{StaticResource TrainingDayToHeightWithMaxValue}">
+                                <Binding Path="HistoryDays[6]"></Binding>
+                                <Binding Path="MaxHistoryValue"></Binding>
+                            </MultiBinding>
+                        </Grid.HeightRequest>
+                    </Grid>
+                </Grid>
+                <Label HorizontalOptions="Center" Grid.Column="7" Grid.Row="1" Text="Sa"></Label>
+
+                <Grid RowSpan="2" ColumnSpan="9" Background="{DynamicResource Surface}" Opacity="0.85" IsVisible="{Binding HistoryDays, Converter={StaticResource IsListNullOrEmpty}}">
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Margin="0,0,0,18" Opacity="0.5">
+                        <Image HorizontalOptions="Center" VerticalOptions="Center" Source="empty_chart.png" WidthRequest="32" Margin="0,0,0,8">
+                            <Image.Behaviors>
+                                <behaviors:IconTintColorBehavior TintColor="White"/>
+                            </Image.Behaviors>
+                        </Image>
+                        <Label HorizontalOptions="Center" VerticalOptions="Center" Text="No data yet" Margin="0,0,0,4"></Label>
+                        <Label HorizontalOptions="Center" VerticalOptions="Center" FontSize="12" Text="Let's start a workout first"></Label>
+                    </VerticalStackLayout>
+                </Grid>
+            </Grid>
+        </Grid>
+    </ScrollView>
+</ContentPage>

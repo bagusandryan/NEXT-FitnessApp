@@ -1,0 +1,126 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="redraven.Views.SettingsPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:contentViews="clr-namespace:redraven.ContentViews"
+    xmlns:converters="clr-namespace:redraven.Converters"
+    xmlns:viewModels="clr-namespace:redraven.ViewModels"
+    Title="SettingsPage"
+    x:DataType="viewModels:SettingsViewModel"
+    Shell.NavBarIsVisible="False">
+    <ContentPage.Resources>
+        <converters:DoubleArrayToThickness x:Key="DoubleArrayToThickness"></converters:DoubleArrayToThickness>
+    </ContentPage.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Row="0" x:Name="UserGreetings"  Margin="30,0">
+            <VerticalStackLayout>
+                <!-- User's Greetings -->
+                <Label Margin="0,20,0,0"
+                       HorizontalOptions="Start"
+                       Style="{DynamicResource SubHeadingLabelOnPage}"
+                       Text="Your settings" />
+                <Label Margin="0,-4,0,0"
+                       HorizontalOptions="Start"
+                       Style="{DynamicResource HeadingLabelOnPage}"
+                       Text="Configuration" />
+            </VerticalStackLayout>
+        </Grid>
+        <Grid Grid.Row="1" x:Name="UpperContentGrid" HorizontalOptions="Center" VerticalOptions="Start">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <!-- User's Card -->
+            <Grid x:Name="UserGrid" MinimumWidthRequest="280">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"></RowDefinition>
+                    <RowDefinition Height="228"></RowDefinition>
+                    <RowDefinition Height="80"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.ColumnSpan="2" Grid.Row="0" Background="Transparent" ></Grid>
+                <Border StrokeThickness="0" StrokeShape="RoundRectangle 30,30,0,0" Grid.ColumnSpan="2" Grid.Row="1"  Margin="0,0,0,-1">
+                    <Border.Background>
+                        <RadialGradientBrush>
+                            <GradientStop Color="{DynamicResource DarkGradientCenterColor}"
+                                          Offset="0.1" />
+                            <GradientStop Color="{DynamicResource DarkGradientCornerColor}"
+                                          Offset="1.0" />
+                        </RadialGradientBrush>
+                    </Border.Background>
+                </Border>
+                <Border StrokeThickness="0" StrokeShape="RoundRectangle 0,0,30,30" Grid.ColumnSpan="2" Grid.Row="2" Background="{DynamicResource ContentHolderSurfaceBrush}">
+                    <contentViews:UnderlineEntry TextColor="{DynamicResource OnSurface}" VerticalOptions="Center" Padding="20,0,90,8" x:Name="UsernameUnderlineEntry" EntryUIOnTextChanged="Username_EntryOnTextChanged" Text="{Binding SelectedUser.Name}" HeaderText="Your name"/>
+                </Border>
+                <Image Grid.RowSpan="2" Grid.ColumnSpan="2"
+                       HorizontalOptions="Start"
+                       x:Name="UserProfileImage"
+                       Source="{Binding SelectedUser.ProfilePictureFileName}"
+                       Margin="{Binding SelectedUser.ProfilePictureMargin, Converter={StaticResource DoubleArrayToThickness}}"/>
+                <ImageButton Margin="0,0,28,42" Grid.Column="1" Grid.RowSpan="3" VerticalOptions="End" HorizontalOptions="End" Background="{DynamicResource PrimaryBrush}" HeightRequest="60" WidthRequest="60" Source="image_edit.png" Aspect="Center" Command="{Binding ChangePictureCommand}" CommandParameter="{Binding Source={x:Reference UserProfileImage}}">
+                    <ImageButton.Clip>
+                        <EllipseGeometry Center="30,30"
+                                             RadiusX="30"
+                                             RadiusY="30" />
+                    </ImageButton.Clip>
+                </ImageButton>
+            </Grid>
+        </Grid>
+
+        <Border Grid.Row="2" Style="{DynamicResource ContentHolderBorder}" Margin="0,60,0,0">
+            <Border.Shadow>
+                <Shadow Brush="{DynamicResource Surface}"
+                        Offset="0,-20"
+                        Radius="40"
+                        Opacity="0.8" />
+            </Border.Shadow>
+            <ScrollView>
+                <behaviors:DockLayout Margin="20" ShouldExpandLastChild="False">
+                    <Label Text="Custom image position" Style="{DynamicResource SubHeadingDescriptionLabel}" HorizontalOptions="Start"/>
+                    <Grid ColumnSpacing="12" Margin="-4,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <contentViews:UnderlineEntry x:Name="MarginLeftEntry" Grid.Column="0" Grid.Row="0" Padding="8" TextColor="{DynamicResource OnSurface}" EntryUIOnTextChanged="LeftUnderlineEntry_OnEntryUIOnTextChanged" VerticalOptions="Center" HeaderText="Left" Keyboard="Numeric"/>
+                        <contentViews:UnderlineEntry x:Name="MarginTopEntry" Grid.Column="1" Grid.Row="0" Padding="8" TextColor="{DynamicResource OnSurface}" EntryUIOnTextChanged="TopUnderlineEntry_OnEntryUIOnTextChanged" VerticalOptions="Center" HeaderText="Top" Keyboard="Numeric"/>
+                        <contentViews:UnderlineEntry x:Name="MarginRightEntry" Grid.Column="0" Grid.Row="1" Padding="8" TextColor="{DynamicResource OnSurface}" EntryUIOnTextChanged="RightUnderlineEntry_OnEntryUIOnTextChanged" VerticalOptions="Center" HeaderText="Right" Keyboard="Numeric"/>
+                        <contentViews:UnderlineEntry x:Name="MarginBottomEntry" Grid.Column="1" Grid.Row="1" Padding="8" TextColor="{DynamicResource OnSurface}" EntryUIOnTextChanged="BottomUnderlineEntry_OnEntryUIOnTextChanged" VerticalOptions="Center" HeaderText="Bottom" Keyboard="Numeric"/>
+                    </Grid>
+
+
+
+                    <Grid  IsVisible="False" behaviors:DockLayout.DockPosition="Top" x:Name="UserProgrammesHEader" Margin="0,0,0,8">
+                        <Label Text="Your costume exercises" Style="{DynamicResource SubHeadingDescriptionLabel}" HorizontalOptions="Start"></Label>
+                        <Label Text="Add a new programme" Style="{DynamicResource SubHeadingDescriptionLabel}" HorizontalOptions="End"></Label>
+                    </Grid>
+                    <contentViews:InfoHolderListItem  IsVisible="False" behaviors:DockLayout.DockPosition="Top" x:Name="FirstUserProgrammeListItem" TitleText="Pull Push Leg" DescriptionText="Currently active / 3 exercise days / 4 rest days"></contentViews:InfoHolderListItem>
+                    <contentViews:InfoHolderListItem  IsVisible="False" behaviors:DockLayout.DockPosition="Top" x:Name="SecondUserProgrammeListItem" TitleText="Britney pullup" DescriptionText="Currently inactive / 3 exercise days / 4 rest days" Margin="0,0,0,36"></contentViews:InfoHolderListItem>
+
+                    <Grid  IsVisible="False" behaviors:DockLayout.DockPosition="Top" x:Name="CustomExerciseHeader" Margin="0,0,0,8">
+                        <Label Text="Your costume exercises" Style="{DynamicResource SubHeadingDescriptionLabel}" HorizontalOptions="Start"></Label>
+                        <Label Text="Add a new exercise" Style="{DynamicResource SubHeadingDescriptionLabel}" HorizontalOptions="End"></Label>
+                    </Grid>
+                    <contentViews:InfoHolderListItem  IsVisible="False" behaviors:DockLayout.DockPosition="Top" x:Name="FirstCustomExerciseListItem" TitleText="Britney pullup" DescriptionText="Chest shoulder etc"></contentViews:InfoHolderListItem>
+                    <contentViews:InfoHolderListItem IsVisible="False" behaviors:DockLayout.DockPosition="Top" x:Name="SecondCustomExerciseListItem" TitleText="Britney pullup" DescriptionText="Chest shoulder etc"></contentViews:InfoHolderListItem>
+
+                    <Label behaviors:DockLayout.DockPosition="Bottom" Text="{Binding ThirdPartyAppsSupportText}" Style="{DynamicResource SubHeadingDescriptionLabel}" HorizontalOptions="Fill"/>
+                </behaviors:DockLayout>
+            </ScrollView>
+        </Border>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <Color x:Key="Primary">#1FD9CD</Color>
+    <Color x:Key="OnPrimary">#003733</Color>
+    <Color x:Key="PrimaryContainer">#00504B</Color>
+    <Color x:Key="OnPrimaryContainer">#56FAED</Color>
+
+    <Color x:Key="Secondary">#B0CCC8</Color>
+    <Color x:Key="OnSecondary">#1C3532</Color>
+    <Color x:Key="SecondaryContainer">#324B49</Color>
+    <Color x:Key="OnSecondaryContainer">#CCE8E4</Color>
+
+    <Color x:Key="Tertiary">#AFC9E7</Color>
+    <Color x:Key="OnTertiary">#18324A</Color>
+    <Color x:Key="TertiaryContainer">#2F4962</Color>
+    <Color x:Key="OnTertiaryContainer">#CFE5FF</Color>
+
+    <Color x:Key="Error">#FFB4AB</Color>
+    <Color x:Key="OnError">#690005</Color>
+    <Color x:Key="ErrorContainer">#93000A</Color>
+    <Color x:Key="OnErrorContainer">#FFDAD6</Color>
+
+    <Color x:Key="Surface">#191C1C</Color>
+    <Color x:Key="OnSurface">#E0E3E1</Color>
+
+    <Color x:Key="SurfaceAlt">#3F4947</Color>
+    <Color x:Key="OnSurfaceAlt">#BEC9C6</Color>
+
+    <Color x:Key="Outline">#899391</Color>
+
+    <Color x:Key="White">#ffffff</Color>
+    <Color x:Key="SlightWhite">#fafafa</Color>
+    <Color x:Key="Black">#000000</Color>
+
+    <Color x:Key="Gray100">#f7faf8</Color>
+    <Color x:Key="Gray200">#eff1f0</Color>
+    <Color x:Key="Gray300">#e0e3e1</Color>
+    <Color x:Key="Gray400">#a9acab</Color>
+    <Color x:Key="Gray500">#747877</Color>
+    <Color x:Key="Gray600">#4f5352</Color>
+    <Color x:Key="Gray900">#383c3b</Color>
+    <Color x:Key="Gray950">#191c1c</Color>
+
+    <Color x:Key="DarkGradientCenterColor">#656565</Color>
+    <Color x:Key="DarkGradientCornerColor">#494C4C</Color>
+
+    <Color x:Key="ContentHolderColor">#313737</Color>
+
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
+    <SolidColorBrush x:Key="OnPrimaryBrush" Color="{StaticResource OnPrimary}"/>
+    <SolidColorBrush x:Key="PrimaryContainerBrush" Color="{StaticResource PrimaryContainer}"/>
+    <SolidColorBrush x:Key="OnPrimaryContainerBrush" Color="{StaticResource OnPrimaryContainer}"/>
+
+    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
+    <SolidColorBrush x:Key="OnSecondaryBrush" Color="{StaticResource OnSecondary}"/>
+    <SolidColorBrush x:Key="SecondaryContainerBrush" Color="{StaticResource SecondaryContainer}"/>
+    <SolidColorBrush x:Key="OnSecondaryContainerBrush" Color="{StaticResource OnSecondaryContainer}"/>
+
+    <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
+    <SolidColorBrush x:Key="OnTertiaryBrush" Color="{StaticResource OnTertiary}"/>
+    <SolidColorBrush x:Key="TertiaryContainerBrush" Color="{StaticResource TertiaryContainer}"/>
+    <SolidColorBrush x:Key="OnTertiaryContainerBrush" Color="{StaticResource OnTertiaryContainer}"/>
+
+    <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}"/>
+    <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource Black}"/>
+    <SolidColorBrush x:Key="Gray100Brush" Color="{StaticResource Gray100}"/>
+    <SolidColorBrush x:Key="Gray200Brush" Color="{StaticResource Gray200}"/>
+    <SolidColorBrush x:Key="Gray300Brush" Color="{StaticResource Gray300}"/>
+    <SolidColorBrush x:Key="Gray400Brush" Color="{StaticResource Gray400}"/>
+    <SolidColorBrush x:Key="Gray500Brush" Color="{StaticResource Gray500}"/>
+    <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
+    <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
+    <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+
+    <SolidColorBrush x:Key="ContentHolderSurfaceBrush" Color="{StaticResource ContentHolderColor}"/>
+
+    <RadialGradientBrush x:Key="ContentHolderGradientBrush">
+        <GradientStop Color="{DynamicResource DarkGradientCenterColor}"
+                      Offset="0.1" />
+        <GradientStop Color="{DynamicResource DarkGradientCornerColor}"
+                      Offset="1.0" />
+    </RadialGradientBrush>
+
+    <Color x:Key="Yellow100Accent">#F7B548</Color>
+    <Color x:Key="Yellow200Accent">#FFD590</Color>
+    <Color x:Key="Yellow300Accent">#FFE5B9</Color>
+    <Color x:Key="Cyan100Accent">#28C2D1</Color>
+    <Color x:Key="Cyan200Accent">#7BDDEF</Color>
+    <Color x:Key="Cyan300Accent">#C3F2F4</Color>
+    <Color x:Key="Blue100Accent">#3E8EED</Color>
+    <Color x:Key="Blue200Accent">#72ACF1</Color>
+    <Color x:Key="Blue300Accent">#A7CBF6</Color>
+
+</ResourceDictionary>

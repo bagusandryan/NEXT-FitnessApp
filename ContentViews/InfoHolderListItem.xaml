@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="redraven.ContentViews.InfoHolderListItem" x:Name="This">
+    <ContentView.Resources>
+        <behaviors:InvertedBoolConverter x:Key="InvertedBoolConverter"></behaviors:InvertedBoolConverter>
+        <behaviors:VariableMultiValueConverter x:Key="AnyBoolTrue" ConditionType="Any"></behaviors:VariableMultiValueConverter>
+        <behaviors:IsStringNotNullOrWhiteSpaceConverter x:Key="StringNotNullOrWhiteSpaceConverter"></behaviors:IsStringNotNullOrWhiteSpaceConverter>
+    </ContentView.Resources>
+    <Grid  BindingContext="{x:Reference This}">
+        <HorizontalStackLayout>
+            <Border WidthRequest="36" HeightRequest="36" StrokeShape="RoundRectangle 8" BackgroundColor="{DynamicResource ContentHolderColor}" StrokeThickness="{Binding StrokeThickness}" Stroke="{DynamicResource Primary}" Margin="0,0,12,0">
+                <Border.IsVisible>
+                    <MultiBinding Converter="{StaticResource AnyBoolTrue}">
+                        <Binding Path="InfoSmallBoxText" Converter="{StaticResource StringNotNullOrWhiteSpaceConverter}" />
+                        <Binding Path="IsVisible" Source="{x:Reference ImageUI1}" />
+                    </MultiBinding>
+                </Border.IsVisible>
+                <Grid HorizontalOptions="Center" VerticalOptions="Center">
+                    <Label x:Name="InfoLabel" IsVisible="{Binding Source={x:Reference ImageUI1}, Path=IsVisible, Converter={StaticResource InvertedBoolConverter}}" Text="{Binding InfoSmallBoxText}" Style="{DynamicResource SubHeadingLabelOnPage}"></Label>
+                    <Image x:Name="ImageUI1" IsVisible="{Binding IsImageVisible1}" Source="{Binding ImageSource1}" Margin="6">
+                        <Image.Behaviors>
+                            <behaviors:IconTintColorBehavior TintColor="#1FD9CD" />
+                        </Image.Behaviors>
+                    </Image>
+                    <Image x:Name="ImageUI2" IsVisible="{Binding IsImageVisible2}" Source="{Binding ImageSource2}" Margin="6" BackgroundColor="{DynamicResource ContentHolderColor}">
+                        <Image.Behaviors>
+                            <behaviors:IconTintColorBehavior TintColor="#1FD9CD" />
+                        </Image.Behaviors>
+                    </Image>
+                </Grid>
+            </Border>
+            <VerticalStackLayout VerticalOptions="Center">
+                <Label Text="{Binding TitleText}" Style="{DynamicResource SubHeadingLabelOnPage}"></Label>
+                <Label Text="{Binding DescriptionText}" Style="{DynamicResource SubHeadingDescriptionLabel}"></Label>
+            </VerticalStackLayout>
+        </HorizontalStackLayout>
+        <Image Source="chevron_right.png" HorizontalOptions="End" VerticalOptions="Fill" IsVisible="{Binding IsRightChevronVisible}">
+            <Image.Behaviors>
+                <behaviors:IconTintColorBehavior TintColor="#fff" />
+            </Image.Behaviors>
+        </Image>
+    </Grid>
+</ContentView>

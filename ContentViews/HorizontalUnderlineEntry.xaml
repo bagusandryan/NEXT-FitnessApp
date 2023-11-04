@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="redraven.ContentViews.HorizontalUnderlineEntry"
+             x:Name="this">
+    <Grid BindingContext="{x:Reference this}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Label Grid.RowSpan="2"
+               Grid.Column="0"
+               Margin="0,0,4,0" 
+               VerticalOptions="Center"
+               HorizontalOptions="Start"
+               Text="{Binding HeaderText}" 
+               Style="{DynamicResource EntryHeader}" 
+               FontSize="8" 
+               FontFamily="OpenSansRegular"/>
+        <Entry Grid.Column="1" Grid.Row="0" TextColor="{Binding TextColor}" x:Name="EntryUI" Completed="Entry_OnCompleted" Margin="0,-8,0,-2" Style="{DynamicResource NormalEntryOnLightSurface}" Text="{Binding Text}" Keyboard="{Binding Keyboard}" Placeholder="{Binding PlaceholderText}"/>
+        <Border Grid.Column="1" Grid.Row="1"  Margin="-4,-8,-8,0" BackgroundColor="{DynamicResource Primary}" Stroke="Transparent" HeightRequest="8" StrokeShape="RoundRectangle 10"></Border>
+    </Grid>
+</ContentView>

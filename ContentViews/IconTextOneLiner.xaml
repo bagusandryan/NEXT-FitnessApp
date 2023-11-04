@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="redraven.ContentViews.IconTextOneLiner"
+             x:Name="This">
+    <Grid ColumnSpacing="8" BindingContext="{x:Reference This}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" VerticalOptions="Center">
+            <Border Padding="3" Background="{DynamicResource Surface}" StrokeShape="RoundRectangle 30" Stroke="Transparent">
+                <Image Source="{Binding ImageSource}" Margin="6" WidthRequest="20">
+                    <Image.Behaviors>
+                        <behaviors:IconTintColorBehavior TintColor="White"></behaviors:IconTintColorBehavior>
+                    </Image.Behaviors>
+                </Image>
+            </Border>
+        </Grid>
+        <Label Grid.Column="1" VerticalOptions="Center" Text="{Binding Text}" Style="{DynamicResource SmallLabel}"></Label>
+    </Grid>
+</ContentView>

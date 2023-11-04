@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:redraven.Models"
+             xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:contentViews="clr-namespace:redraven.ContentViews"
+             xmlns:converters="clr-namespace:redraven.Converters"
+             xmlns:viewModels="clr-namespace:redraven.ViewModels"
+             x:Class="redraven.Views.TrainingDayPage"
+             Title="TrainingDayPage"
+             x:DataType="viewModels:TrainingDayViewModel"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False">
+    <ContentPage.Resources>
+        <converters:ExercisePlanToString x:Key="ExercisePlanToString"></converters:ExercisePlanToString>
+        <converters:TrainingDayToTotalWeight x:Key="TrainingDayToTotalWeight"></converters:TrainingDayToTotalWeight>
+        <converters:TrainingDayToTotalReps x:Key="TrainingDayToTotalReps"></converters:TrainingDayToTotalReps>
+        <converters:TrainingDayToCalories x:Key="TrainingDayToCalories"></converters:TrainingDayToCalories>
+        <converters:TrainingDayToTotalWorkoutTime x:Key="TrainingDayToTotalWorkoutTime"></converters:TrainingDayToTotalWorkoutTime>
+        <behaviors:InvertedBoolConverter x:Key="InvertedBoolConverter"></behaviors:InvertedBoolConverter>
+        <converters:BoolToStrokeThickness x:Key="BoolToStrokeThickness"/>
+        <behaviors:VariableMultiValueConverter 
+        x:Key="AnyBoolTrue"
+        ConditionType="Any"/>
+        <behaviors:VariableMultiValueConverter 
+            x:Key="AllBoolTrue"
+            ConditionType="All"/>
+        <behaviors:VariableMultiValueConverter 
+            x:Key="NoneBoolTrue"
+            ConditionType="None"/>
+    </ContentPage.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid x:Name="NavigationGrid">
+            <contentViews:IconTextButton x:Name="GoBackButton" ButtonOnClicked="IconTextButton_OnButtonOnClicked" Text="Home" ImageSource="back.png" ></contentViews:IconTextButton>
+            <contentViews:IconTextButton x:Name="SelectOtherPlanButton"  HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,0,0" ButtonOnClicked="SelectOtherPlan_OnClicked" Text="Select other plan" ImageSource="calendar.png" >
+                <contentViews:IconTextButton.IsVisible>
+                    <MultiBinding Converter="{StaticResource NoneBoolTrue}">
+                        <Binding Path="IsSummaryMode" Source="{RelativeSource AncestorType={x:Type viewModels:TrainingDayViewModel}}" />
+                        <Binding Path="IsHistoryMode" Source="{RelativeSource AncestorType={x:Type viewModels:TrainingDayViewModel}}" />
+                    </MultiBinding>
+                </contentViews:IconTextButton.IsVisible>
+            </contentViews:IconTextButton>
+        </Grid>
+        <Grid Grid.Row="1" x:Name="TitleOverviewGrid" VerticalOptions="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Margin="0,30">
+                <Label HorizontalTextAlignment="Center" Text="{Binding TrainingDay.Name}"  Style="{DynamicResource HeadingLabelOnPage}" LineBreakMode="WordWrap"/>
+                <contentViews:InfoTextWithIcon Text="{Binding TrainingDay, Converter={StaticResource TrainingDayToTotalWorkoutTime}}" ImageSource="clock_outline.png"></contentViews:InfoTextWithIcon>
+            </VerticalStackLayout>
+            <HorizontalStackLayout Margin="0,15,0,60" Grid.Row="1" HorizontalOptions="Center" Spacing="42">
+                <contentViews:VerticalBadgeIconText
+                    ImageSource="weight_kilogram.png"
+                    TitleText="{Binding TrainingDay, Converter={StaticResource TrainingDayToTotalWeight}}"
+                    DescriptionText="{Binding WeightDescriptionString}">
+                    <contentViews:VerticalBadgeIconText.IsBadgeVisible>
+                        <MultiBinding Converter="{StaticResource AnyBoolTrue}">
+                            <Binding Path="IsSummaryMode" />
+                            <Binding Path="IsHistoryMode" />
+                        </MultiBinding>
+                    </contentViews:VerticalBadgeIconText.IsBadgeVisible>
+                </contentViews:VerticalBadgeIconText>
+                <contentViews:VerticalBadgeIconText 
+                    ImageSource="fire.png"
+                    TitleText="{Binding TrainingDay, Converter={StaticResource TrainingDayToCalories}}"
+                    DescriptionText="{Binding CaloriesDescriptionString}">
+                    <contentViews:VerticalBadgeIconText.IsBadgeVisible>
+                        <MultiBinding Converter="{StaticResource AnyBoolTrue}">
+                            <Binding Path="IsSummaryMode" />
+                            <Binding Path="IsHistoryMode" />
+                        </MultiBinding>
+                    </contentViews:VerticalBadgeIconText.IsBadgeVisible>
+                </contentViews:VerticalBadgeIconText>
+                <contentViews:VerticalBadgeIconText 
+                    ImageSource="reps.png"
+                    TitleText="{Binding TrainingDay, Converter={StaticResource TrainingDayToTotalReps}}"
+                    DescriptionText="{Binding RepsDescriptionString}">
+                    <contentViews:VerticalBadgeIconText.IsBadgeVisible>
+                        <MultiBinding Converter="{StaticResource AnyBoolTrue}">
+                            <Binding Path="IsSummaryMode" />
+                            <Binding Path="IsHistoryMode" />
+                        </MultiBinding>
+                    </contentViews:VerticalBadgeIconText.IsBadgeVisible>
+                </contentViews:VerticalBadgeIconText>
+            </HorizontalStackLayout>
+        </Grid>
+
+        <Border Grid.Row="2" Style="{DynamicResource ContentHolderBorder}">
+            <Border.Shadow>
+                <Shadow Brush="{DynamicResource Surface}"
+                        Offset="0,-20"
+                        Radius="40"
+                        Opacity="0.8" />
+            </Border.Shadow>
+            <CollectionView x:Name="ExercisePlansCollectionView" VerticalOptions="Start" ItemsSource="{Binding TrainingDay.ExercisePlans}" SelectionMode="Single">
+                <CollectionView.Behaviors>
+                    <behaviors:EventToCommandBehavior
+                        EventName="SelectionChanged"
+                        Command="{Binding ExercisePlanSelectedCommand}"
+                        CommandParameter="{Binding SelectedItem, Source={x:Reference ExercisePlansCollectionView}}"/>
+                </CollectionView.Behaviors>
+                <CollectionView.Header>
+                    <StackLayout HeightRequest="12" BackgroundColor="Transparent">
+                    </StackLayout>
+                </CollectionView.Header>
+                <CollectionView.Footer>
+                    <StackLayout HeightRequest="112" BackgroundColor="Transparent"/>
+                </CollectionView.Footer>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:ExercisePlan">
+                        <contentViews:InfoHolderListItem 
+                            Margin="26,20,26,0"
+                            InfoSmallBoxText="{Binding IndexOrder}"
+                            ImageSource1="check.png"
+                            StrokeThickness="{Binding IsCurrentExercisePlan, Converter={StaticResource BoolToStrokeThickness}}"
+                            TitleText="{Binding Exercise.Name}"
+                            DescriptionText="{Binding Converter={StaticResource ExercisePlanToString}}">
+                            <contentViews:InfoHolderListItem.IsImageVisible1>
+                                <MultiBinding Converter="{StaticResource AnyBoolTrue}">
+                                    <Binding Path="IsSummaryMode" Source="{RelativeSource AncestorType={x:Type viewModels:TrainingDayViewModel}}"/>
+                                    <Binding Path="IsHistoryMode" Source="{RelativeSource AncestorType={x:Type viewModels:TrainingDayViewModel}}"/>
+                                    <Binding Path="IsExerciseDone" />
+                                </MultiBinding>
+                            </contentViews:InfoHolderListItem.IsImageVisible1>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="CommonStates">
+                                    <VisualState Name="Normal"></VisualState>
+                                    <VisualState Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="Transparent"></Setter>
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                        </contentViews:InfoHolderListItem>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Border>
+
+        <contentViews:PrimaryIconTextButton x:Name="StartWorkingOutButton" HorizontalOptions="Center" Grid.Row="0" Grid.RowSpan="3" VerticalOptions="End" Margin="0,0,0,30" Text="Start working out" ImageSource="dumbbell.png">
+            <contentViews:PrimaryIconTextButton.IsVisible>
+                <MultiBinding Converter="{StaticResource AllBoolTrue}">
+                    <Binding Path="TrainingDay.IsStarted" Converter="{StaticResource InvertedBoolConverter}" />
+                    <Binding Path="IsHistoryMode" Converter="{StaticResource InvertedBoolConverter}"/>
+                </MultiBinding>
+            </contentViews:PrimaryIconTextButton.IsVisible>
+            <contentViews:PrimaryIconTextButton.Behaviors>
+                <behaviors:EventToCommandBehavior
+                    EventName="ButtonOnClicked"
+                    Command="{Binding StartWorkingOutCommand}"/>
+            </contentViews:PrimaryIconTextButton.Behaviors>
+        </contentViews:PrimaryIconTextButton>
+
+        <contentViews:PrimaryIconTextButton IsVisible="{Binding IsSummaryMode}" x:Name="SaveWorkingOutButton" HorizontalOptions="Center" Grid.Row="0" Grid.RowSpan="3" VerticalOptions="End" Margin="0,0,0,30" Text="Finish working out" ImageSource="save.png">
+            <contentViews:PrimaryIconTextButton.Behaviors>
+                <behaviors:EventToCommandBehavior
+                    EventName="ButtonOnClicked"
+                    Command="{Binding SaveTodaysTrainingCommand}"/>
+            </contentViews:PrimaryIconTextButton.Behaviors>
+        </contentViews:PrimaryIconTextButton>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="redraven.ContentViews.VerticalBadgeIconText" x:Name="This">
+    <VerticalStackLayout Spacing="10" BindingContext="{x:Reference This}">
+        <Grid>
+            <Border StrokeShape="RoundRectangle 62" BackgroundColor="{DynamicResource ContentHolderColor}" HeightRequest="62" WidthRequest="62" StrokeThickness="0">
+                <Image Source="{Binding ImageSource}" Margin="12">
+                    <Image.Behaviors>
+                        <behaviors:IconTintColorBehavior TintColor="{Binding Source={x:Reference BadgeLabel}, Path=TextColor}" />
+                    </Image.Behaviors>
+                </Image>
+            </Border>
+            <Border x:Name="BadgeBorder" IsVisible="{Binding IsBadgeVisible}" HorizontalOptions="End" VerticalOptions="End" StrokeShape="RoundRectangle 32" BackgroundColor="{DynamicResource Primary}" HeightRequest="32" WidthRequest="32" StrokeThickness="2" Stroke="{DynamicResource Surface}">
+                <Image Source="check.png" Margin="4"/>
+            </Border>
+        </Grid>
+
+        <Label x:Name="BadgeLabel" VerticalOptions="Center" HorizontalOptions="Center" Style="{DynamicResource SubHeadingLabelOnPage}" Text="{Binding TitleText}"></Label>
+        <Label VerticalOptions="Center" HorizontalOptions="Center"  Style="{DynamicResource SubHeadingDescriptionLabel}" Text="{Binding DescriptionText}"></Label>
+    </VerticalStackLayout>
+</ContentView>

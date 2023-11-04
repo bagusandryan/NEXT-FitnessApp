@@ -1,0 +1,180 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:contentViews="clr-namespace:redraven.ContentViews"
+             xmlns:helper="clr-namespace:redraven.Helper"
+             xmlns:viewModel="clr-namespace:redraven.ViewModel"
+             xmlns:system="clr-namespace:System;assembly=System.Runtime"
+             x:Class="redraven.Views.OnBoardingPage"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
+             x:DataType="viewModel:OnBoardingViewModel">
+    <ContentPage.Resources>
+        <behaviors:InvertedBoolConverter x:Key="InvertedBool"></behaviors:InvertedBoolConverter>
+        <behaviors:VariableMultiValueConverter 
+            x:Key="AllBoolTrue"
+            ConditionType="All"/>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid Padding="30,0">
+            <VerticalStackLayout x:Name="NameStackLayout" VerticalOptions="Center" IsVisible="{Binding IsNameEntered, Converter={StaticResource InvertedBool}}">
+                <Label
+                    HorizontalOptions="Start"
+                    Text="Hi, who's there?" Style="{DynamicResource SubHeadingLabelOnPage}"
+                    VerticalOptions="Center" />
+                <Entry Style="{DynamicResource HugeEntry}" x:Name="NameEntry" Placeholder="Britney Spears">
+                    <Entry.Behaviors>
+                        <behaviors:EventToCommandBehavior EventName="Completed" 
+                                                          Command="{Binding UpdateUserNameCommand}"
+                                                          CommandParameter="{Binding Source={x:Reference NameEntry}}"></behaviors:EventToCommandBehavior>
+                    </Entry.Behaviors>
+                </Entry>
+                <Border Margin="0,-8,0,0" BackgroundColor="{DynamicResource Primary}" Stroke="Transparent" HeightRequest="8" StrokeShape="RoundRectangle 10">
+                </Border>
+            </VerticalStackLayout>
+            <Grid x:Name="ProgrammeStackLayout" RowSpacing="50" HorizontalOptions="Fill" VerticalOptions="Start" Margin="0,0,0,30">
+                <Grid.IsVisible>
+                    <MultiBinding Converter="{StaticResource AllBoolTrue}">
+                        <Binding Path="IsNameEntered" />
+                        <Binding Path="IsProgrammeSelected" Converter="{StaticResource InvertedBool}"/>
+                    </MultiBinding>
+                </Grid.IsVisible>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <VerticalStackLayout Grid.Row="0" Margin="0,0,0,-20">
+                    <!-- User's Greetings -->
+                    <Label Margin="0,20,0,0"
+                HorizontalOptions="Start"
+                Style="{DynamicResource SubHeadingLabelOnPage}"
+                Text="Let's choose your preferred" />
+                    <Label Margin="0,-4,0,0"
+                HorizontalOptions="Start"
+                Style="{DynamicResource HeadingLabelOnPage}"
+                Text="Workout Plan" />
+                </VerticalStackLayout>
+                <Grid Grid.Row="1" HorizontalOptions="Fill" VerticalOptions="Fill">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="208"></RowDefinition>
+                        <RowDefinition Height="80"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.ColumnSpan="2" Grid.Row="0" Background="Transparent" ></Grid>
+                    <Border StrokeThickness="0" StrokeShape="RoundRectangle 30,30,0,0" Grid.ColumnSpan="2" Grid.Row="1"  Margin="0,0,0,-1">
+                        <Border.Background>
+                            <RadialGradientBrush>
+                                <GradientStop Color="{DynamicResource DarkGradientCenterColor}"
+                          Offset="0.1" />
+                                <GradientStop Color="{DynamicResource DarkGradientCornerColor}"
+                          Offset="1.0" />
+                            </RadialGradientBrush>
+                        </Border.Background>
+                        <VerticalStackLayout Margin="20">
+                            <contentViews:IconTextOneLiner ImageSource="calendar.png" Text="3 days a week"></contentViews:IconTextOneLiner>
+                            <contentViews:IconTextOneLiner ImageSource="dumbbell.png" Text="3 exercises per workout session"></contentViews:IconTextOneLiner>
+                            <contentViews:IconTextOneLiner ImageSource="sleep.png" Text="Rest day between each day of lifting"></contentViews:IconTextOneLiner>
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border StrokeThickness="0" StrokeShape="RoundRectangle 0,0,30,30" Grid.ColumnSpan="2" Grid.Row="2" Background="{DynamicResource ContentHolderSurfaceBrush}">
+                        <VerticalStackLayout Margin="14,14,0,0">
+                            <Label Style="{DynamicResource SubHeadingLabelOnLightContainer}" Text="For the beginner"></Label>
+                            <Label Style="{DynamicResource HeadingLabelOnLightContainer}" Text="{Binding SelectableProgrammes[0].Name}"></Label>
+                        </VerticalStackLayout>
+                    </Border>
+                    <ImageButton Margin="0,0,28,42" Grid.Column="1" Grid.RowSpan="3" VerticalOptions="End" HorizontalOptions="End" Background="{DynamicResource PrimaryBrush}" HeightRequest="60" WidthRequest="60" Source="check.png" Aspect="Center" Command="{Binding SelectProgrammeCommand}" CommandParameter="{Binding SelectableProgrammes[0]}">
+                        <ImageButton.Clip>
+                            <EllipseGeometry Center="30,30"
+                             RadiusX="30"
+                             RadiusY="30" />
+                        </ImageButton.Clip>
+                    </ImageButton>
+                </Grid>
+                <Grid Grid.Row="2" HorizontalOptions="Fill" VerticalOptions="Fill">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="208"></RowDefinition>
+                        <RowDefinition Height="80"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.ColumnSpan="2" Grid.Row="0" Background="Transparent" ></Grid>
+                    <Border StrokeThickness="0" StrokeShape="RoundRectangle 30,30,0,0" Grid.ColumnSpan="2" Grid.Row="1"  Margin="0,0,0,-1">
+                        <Border.Background>
+                            <RadialGradientBrush>
+                                <GradientStop Color="{DynamicResource DarkGradientCenterColor}"
+                                              Offset="0.1" />
+                                <GradientStop Color="{DynamicResource DarkGradientCornerColor}"
+                                              Offset="1.0" />
+                            </RadialGradientBrush>
+                        </Border.Background>
+                        <VerticalStackLayout Margin="20">
+                            <contentViews:IconTextOneLiner ImageSource="calendar.png" Text="6 days a week"></contentViews:IconTextOneLiner>
+                            <contentViews:IconTextOneLiner ImageSource="dumbbell.png" Text="Classic Pull-Push-Leg routines"></contentViews:IconTextOneLiner>
+                            <contentViews:IconTextOneLiner ImageSource="sleep.png" Text="Better recovery"></contentViews:IconTextOneLiner>
+                        </VerticalStackLayout>
+                    </Border>
+                    <Border StrokeThickness="0" StrokeShape="RoundRectangle 0,0,30,30" Grid.ColumnSpan="2" Grid.Row="2" Background="{DynamicResource ContentHolderSurfaceBrush}">
+                        <VerticalStackLayout Margin="14,14,0,0">
+                            <Label Style="{DynamicResource SubHeadingLabelOnLightContainer}" Text="For the pro"></Label>
+                            <Label Style="{DynamicResource HeadingLabelOnLightContainer}" Text="{Binding SelectableProgrammes[1].Name}"></Label>
+                        </VerticalStackLayout>
+                    </Border>
+                    <ImageButton Margin="0,0,28,42" Grid.Column="1" Grid.RowSpan="3" VerticalOptions="End" HorizontalOptions="End" Background="{DynamicResource PrimaryBrush}" HeightRequest="60" WidthRequest="60" Source="check.png" Aspect="Center" Command="{Binding SelectProgrammeCommand}" CommandParameter="{Binding SelectableProgrammes[1]}">
+                        <ImageButton.Clip>
+                            <EllipseGeometry Center="30,30"
+                                             RadiusX="30"
+                                             RadiusY="30" />
+                        </ImageButton.Clip>
+                    </ImageButton>
+                </Grid>
+            </Grid>
+            <VerticalStackLayout x:Name="PictureStackLayout" Spacing="12" HorizontalOptions="Center" VerticalOptions="Start">
+                <VerticalStackLayout.IsVisible>
+                    <MultiBinding Converter="{StaticResource AllBoolTrue}">
+                        <Binding Path="IsNameEntered" />
+                        <Binding Path="IsProgrammeSelected" />
+                    </MultiBinding>
+                </VerticalStackLayout.IsVisible>
+                <VerticalStackLayout>
+                    <!-- User's Greetings -->
+                    <Label Margin="0,20,0,0"
+                           HorizontalOptions="Start"
+                           Style="{DynamicResource SubHeadingLabelOnPage}"
+                           Text="Nice to meet you," />
+                    <Label Margin="0,-4,0,0"
+                           HorizontalOptions="Start"
+                           Style="{DynamicResource HeadingLabelOnPage}"
+                           Text="{Binding User.Name}" />
+                </VerticalStackLayout>
+                <Image Margin="-20,30,0,30" Source="unsplash_photos.png" HorizontalOptions="Fill"/>
+                <contentViews:PrimaryIconTextButton x:Name="ImageSelectionButton" Text="Select Image" ButtonWidth="340" ImageSource="upload.png" HorizontalOptions="Center" Margin="0,0,0,12">
+                    <contentViews:PrimaryIconTextButton.Behaviors>
+                        <behaviors:EventToCommandBehavior EventName="ButtonOnClicked" 
+                                                          Command="{Binding SelectImageCommand}"></behaviors:EventToCommandBehavior>
+                    </contentViews:PrimaryIconTextButton.Behaviors>
+                </contentViews:PrimaryIconTextButton>
+                <HorizontalStackLayout Spacing="12">
+                    <Border BackgroundColor="{DynamicResource White}" Stroke="Transparent" HeightRequest="18" WidthRequest="18" StrokeShape="RoundRectangle 10"></Border>
+                    <Label Style="{DynamicResource SmallLabel}" Text="Let's personalize this app!"></Label>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="12">
+                    <Border BackgroundColor="{DynamicResource White}" Stroke="Transparent" HeightRequest="18" WidthRequest="18" StrokeShape="RoundRectangle 10"></Border>
+                    <Label Style="{DynamicResource SmallLabel}" Text="Select a png picture of yourself"></Label>
+                </HorizontalStackLayout>
+                <HorizontalStackLayout Spacing="12">
+                    <Border BackgroundColor="{DynamicResource White}" Stroke="Transparent" HeightRequest="18" WidthRequest="18" StrokeShape="RoundRectangle 10"></Border>
+                    <Label MaximumWidthRequest="290" Style="{DynamicResource SmallLabel}" Text="You could use https://remove.bg to remove the background of your picture"></Label>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

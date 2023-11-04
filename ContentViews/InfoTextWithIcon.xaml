@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="redraven.ContentViews.InfoTextWithIcon" x:Name="This">
+    <HorizontalStackLayout BindingContext="{x:Reference This}" HorizontalOptions="Center" VerticalOptions="Center">
+        <Image
+            VerticalOptions="Center"
+            HorizontalOptions="Start"
+            Margin="0,0,8,0"
+            Source="{Binding ImageSource}">
+            <Image.Behaviors>
+                <behaviors:IconTintColorBehavior TintColor="{Binding Source={x:Reference InfoText}, Path=TextColor}" />
+            </Image.Behaviors>
+        </Image>
+        <Label VerticalOptions="Center"
+               HorizontalOptions="Start"
+               x:Name="InfoText"
+               Text="{Binding Text}"></Label>
+    </HorizontalStackLayout>
+</ContentView>

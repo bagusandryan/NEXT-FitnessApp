@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewModels="clr-namespace:redraven.ViewModels"
+             xmlns:contentViews="clr-namespace:redraven.ContentViews"
+             xmlns:models="clr-namespace:redraven.Models"
+             xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:converters="clr-namespace:redraven.Converters"
+             x:Class="redraven.Views.TrainingDayEditorPage"
+             Title="TrainingDayEditorPage" Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
+             x:DataType="viewModels:TrainingDayEditorViewModel">
+    <ContentPage.Resources>
+        <converters:TrainingDayToTotalWeight x:Key="TrainingDayToTotalWeight"></converters:TrainingDayToTotalWeight>
+        <converters:TrainingDayToTotalReps x:Key="TrainingDayToTotalReps"></converters:TrainingDayToTotalReps>
+        <converters:TrainingDayToCalories x:Key="TrainingDayToCalories"></converters:TrainingDayToCalories>
+        <converters:TrainingDayToTotalWorkoutTime x:Key="TrainingDayToTotalWorkoutTime"></converters:TrainingDayToTotalWorkoutTime>
+        <behaviors:IsListNullOrEmptyConverter x:Key="IsListNullOrEmpty"></behaviors:IsListNullOrEmptyConverter>
+        <converters:IntTimerToString x:Key="IntTimerToString"></converters:IntTimerToString>
+        <behaviors:InvertedBoolConverter x:Key="InvertedBool"></behaviors:InvertedBoolConverter>
+    </ContentPage.Resources>
+    <Grid BindingContext="{Binding TrainingDay}" Margin="30,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid Margin="-30,0,0,0" x:Name="NavigationGrid">
+            <contentViews:IconTextButton ButtonOnClicked="IconTextButton_OnButtonOnClicked" Text="Your plan" ImageSource="back.png" ></contentViews:IconTextButton>
+        </Grid>
+        <Grid Grid.Row="1" x:Name="TitleOverviewGrid" VerticalOptions="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Margin="0,30">
+                <Entry x:DataType="models:TrainingDay" HorizontalTextAlignment="Center" Margin="14,0,0,0" FontSize="35" TextColor="{DynamicResource White}" FontFamily="OpenSansExtraBold" Text="{Binding Name, Mode=TwoWay}" IsVisible="True" x:Name="TrainingDayNameEntry"></Entry>
+                <contentViews:InfoTextWithIcon Text="{Binding Converter={StaticResource TrainingDayToTotalWorkoutTime}}" ImageSource="clock_outline.png"></contentViews:InfoTextWithIcon>
+            </VerticalStackLayout>
+            <HorizontalStackLayout Margin="0,15,0,60" Grid.Row="1" HorizontalOptions="Center" Spacing="42">
+                <contentViews:VerticalBadgeIconText
+                    ImageSource="weight_kilogram.png"
+                    TitleText="{Binding Converter={StaticResource TrainingDayToTotalWeight}}"
+                    DescriptionText="will be lifted"
+                    IsBadgeVisible="False"></contentViews:VerticalBadgeIconText>
+                <contentViews:VerticalBadgeIconText 
+                    ImageSource="fire.png"
+                    TitleText="{Binding  Converter={StaticResource TrainingDayToCalories}}"
+                    DescriptionText="will be burnt"
+                    IsBadgeVisible="False"></contentViews:VerticalBadgeIconText>
+                <contentViews:VerticalBadgeIconText 
+                    ImageSource="reps.png"
+                    TitleText="{Binding Converter={StaticResource TrainingDayToTotalReps}}"
+                    DescriptionText="will be repeated"
+                    IsBadgeVisible="false"></contentViews:VerticalBadgeIconText>
+            </HorizontalStackLayout>
+        </Grid>
+
+
+        <Border Margin="-30,0" Grid.Row="2" Style="{DynamicResource ContentHolderBorder}">
+            <Border.Shadow>
+                <Shadow Brush="{DynamicResource Surface}"
+                            Offset="0,-20"
+                            Radius="40"
+                            Opacity="0.8" />
+            </Border.Shadow>
+            <Grid>
+                <CollectionView x:DataType="models:TrainingDay" ItemsSource="{Binding ExercisePlans}">
+                    <CollectionView.Header>
+                        <StackLayout HeightRequest="12" BackgroundColor="Transparent">
+                        </StackLayout>
+                    </CollectionView.Header>
+                    <CollectionView.Footer>
+                        <StackLayout HeightRequest="112" BackgroundColor="Transparent"/>
+                    </CollectionView.Footer>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:ExercisePlan">
+                            <Grid Margin="28,20,20,0" ColumnSpacing="18">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"></RowDefinition>
+                                    <RowDefinition Height="*"></RowDefinition>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="62"/>
+                                    <ColumnDefinition Width="50"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="70"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Label VerticalOptions="Center" Style="{DynamicResource SubHeadingLabelOnPage}" x:Name="ExerciseLabel" Grid.ColumnSpan="4" Text="{Binding Exercise.Name}"></Label>
+                                <HorizontalStackLayout Margin="-8,0,0,0" Grid.Row="1" Grid.Column="0" Padding="8">
+                                    <HorizontalStackLayout.GestureRecognizers>
+                                        <TapGestureRecognizer  Command="{Binding EditSetCommand, Source={RelativeSource AncestorType={x:Type viewModels:TrainingDayEditorViewModel}}}" CommandParameter="{Binding}"/>
+                                    </HorizontalStackLayout.GestureRecognizers>
+                                    <Image WidthRequest="16" Margin="0,0,4,0" Source="edit.png" HorizontalOptions="Start" VerticalOptions="Center"/>
+                                    <Label Margin="0,0,4,0" 
+                                                   VerticalOptions="Center"
+                                                   HorizontalOptions="Start"
+                                                   Text="Set: " 
+                                                   Style="{DynamicResource SubHeadingDescriptionLabel}" 
+                                                   FontFamily="OpenSansRegular"/>
+                                    <Label VerticalOptions="Center"
+                                                   HorizontalOptions="Start"
+                                                   Text="{Binding TargetSet}"
+                                                   Style="{DynamicResource SubHeadingDescriptionLabel}" 
+                                                   FontFamily="OpenSansRegular"/>
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Margin="-8,0,0,0" Grid.Row="1" Grid.Column="2" Padding="8">
+                                    <HorizontalStackLayout.GestureRecognizers>
+                                        <TapGestureRecognizer  Command="{Binding EditWeightCommand, Source={RelativeSource AncestorType={x:Type viewModels:TrainingDayEditorViewModel}}}" CommandParameter="{Binding}"/>
+                                    </HorizontalStackLayout.GestureRecognizers>
+                                    <Label Margin="0,0,4,0" 
+                                               VerticalOptions="Center"
+                                               HorizontalOptions="Start"
+                                               Text="Weight: " 
+                                               Style="{DynamicResource SubHeadingDescriptionLabel}" 
+                                               FontFamily="OpenSansRegular"/>
+                                    <Label VerticalOptions="Center"
+                                                   HorizontalOptions="Start"
+                                                   Text="{Binding TargetWeight}"
+                                                   Style="{DynamicResource SubHeadingDescriptionLabel}" 
+                                                   FontFamily="OpenSansRegular"/>
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Margin="-8,0,0,0" Grid.Row="1" Grid.Column="1" Padding="8">
+                                    <HorizontalStackLayout.GestureRecognizers>
+                                        <TapGestureRecognizer  Command="{Binding EditRepCommand, Source={RelativeSource AncestorType={x:Type viewModels:TrainingDayEditorViewModel}}}" CommandParameter="{Binding}"/>
+                                    </HorizontalStackLayout.GestureRecognizers>
+                                    <Label Margin="0,0,4,0" 
+                                               VerticalOptions="Center"
+                                               HorizontalOptions="Start"
+                                               Text="Rep: " 
+                                               Style="{DynamicResource SubHeadingDescriptionLabel}" 
+                                               FontFamily="OpenSansRegular"/>
+                                    <Label VerticalOptions="Center"
+                                                   HorizontalOptions="Start"
+                                                   Text="{Binding TargetRepetition}"
+                                                   Style="{DynamicResource SubHeadingDescriptionLabel}" 
+                                                   FontFamily="OpenSansRegular"/>
+                                </HorizontalStackLayout>
+                                <HorizontalStackLayout Margin="-8,0,0,0" Grid.Row="1" Grid.Column="3" Padding="8">
+                                    <HorizontalStackLayout.GestureRecognizers>
+                                        <TapGestureRecognizer  Command="{Binding EditRestTimerCommand, Source={RelativeSource AncestorType={x:Type viewModels:TrainingDayEditorViewModel}}}" CommandParameter="{Binding}"/>
+                                    </HorizontalStackLayout.GestureRecognizers>
+                                    <Label Margin="0,0,4,0" 
+                                                   VerticalOptions="Center"
+                                                   HorizontalOptions="Start"
+                                                   Text="Rest: " 
+                                                   Style="{DynamicResource SubHeadingDescriptionLabel}" 
+                                                   FontFamily="OpenSansRegular"/>
+                                    <Label VerticalOptions="Center"
+                                                   HorizontalOptions="Start"
+                                                   Text="{Binding RestTimer, Converter={StaticResource IntTimerToString}}"
+                                                   Style="{DynamicResource SubHeadingDescriptionLabel}" 
+                                                   FontFamily="OpenSansRegular"/>
+                                </HorizontalStackLayout>
+                                <Grid Margin="0,0,-4,0" RowSpan="2" ColumnSpan="5" HorizontalOptions="End" VerticalOptions="Center" IsVisible="{Binding Path=IsChecked, Source={x:Reference RearrangeCheckBox}, Converter={StaticResource InvertedBool}}">
+                                    <Image WidthRequest="24" Source="delete.png" HorizontalOptions="Center" VerticalOptions="Center">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer  Command="{Binding DeleteExercisePlanCommand, Source={RelativeSource AncestorType={x:Type viewModels:TrainingDayEditorViewModel}}}" CommandParameter="{Binding}"/>
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                </Grid>
+                                <VerticalStackLayout Spacing="8" Margin="0,0,-4,0" Grid.RowSpan="2" Grid.ColumnSpan="5" HorizontalOptions="End" VerticalOptions="Center" IsVisible="{Binding Path=IsChecked, Source={x:Reference RearrangeCheckBox}}">
+                                    <Grid WidthRequest="24" HeightRequest="24">
+                                        <Image WidthRequest="24" Source="menu_up.png" HorizontalOptions="Center" VerticalOptions="Center">
+                                            <Image.Behaviors>
+                                                <behaviors:IconTintColorBehavior TintColor="{Binding Source={x:Reference ExerciseLabel}, Path=TextColor}" />
+                                            </Image.Behaviors>
+                                        </Image>
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding MoveExercisePlanUpCommand, Source={RelativeSource AncestorType={x:Type viewModels:TrainingDayEditorViewModel}}}" CommandParameter="{Binding}"/>
+                                        </Grid.GestureRecognizers>
+                                    </Grid>
+                                    <Grid WidthRequest="24" HeightRequest="24">
+                                        <Image WidthRequest="24" Source="menu_down.png" HorizontalOptions="Center" VerticalOptions="Center">
+                                            <Image.Behaviors>
+                                                <behaviors:IconTintColorBehavior TintColor="{Binding Source={x:Reference ExerciseLabel}, Path=TextColor}" />
+                                            </Image.Behaviors>
+                                        </Image>
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding MoveExercisePlanDownCommand, Source={RelativeSource AncestorType={x:Type viewModels:TrainingDayEditorViewModel}}}" CommandParameter="{Binding}"/>
+                                        </Grid.GestureRecognizers>
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+                <VerticalStackLayout x:DataType="models:TrainingDay" IsVisible="{Binding ExercisePlans, Converter={StaticResource IsListNullOrEmpty}}" HorizontalOptions="Center" VerticalOptions="Center" Margin="0,0,0,18" Opacity="0.5">
+                    <Image HorizontalOptions="Center" VerticalOptions="Center" Source="sleep.png" WidthRequest="32" Margin="0,0,0,8">
+                        <Image.Behaviors>
+                            <behaviors:IconTintColorBehavior TintColor="White"/>
+                        </Image.Behaviors>
+                    </Image>
+                    <Label HorizontalOptions="Center" VerticalOptions="Center" Text="Nothing planed yet" Margin="0,0,0,4"></Label>
+                    <Label HorizontalOptions="Center" VerticalOptions="Center" FontSize="12" Text="Let's add more exercises first"></Label>
+                </VerticalStackLayout>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="2"  Margin="0,0,0,30" ColumnSpacing="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <contentViews:ToggleIconTextButton  x:Name="RearrangeCheckBox" VerticalOptions="End" HorizontalOptions="Start" Text="Rearrange" IconSource="up_down.png" Margin="-2,0,0,-1"/>
+            <contentViews:PrimaryIconTextButton Grid.Column="1" x:Name="AddExerciseToPlanButton" VerticalOptions="End" HorizontalOptions="Fill" Text="Add exercise" ButtonOnClicked="AddExerciseToPlanButton_OnClicked" ImageSource="add_black.png"></contentViews:PrimaryIconTextButton>
+        </Grid>
+    </Grid>
+</ContentPage>

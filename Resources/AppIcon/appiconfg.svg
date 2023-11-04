@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="456" height="456" viewBox="0 0 456 456">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="Rectangle_44" data-name="Rectangle 44" width="89.896" height="38.121" fill="#fff" stroke="#707070" stroke-width="1"/>
+    </clipPath>
+  </defs>
+  <g id="Group_128" data-name="Group 128" transform="translate(7379 -4589)">
+    <rect id="appicon" width="456" height="456" transform="translate(-7379 4589)" fill="#512bd4" opacity="0"/>
+    <g id="appiconfg" transform="translate(-7381.769 4586.276)">
+      <path id="Path_15" data-name="Path 15" d="M105.5,281.609a9.629,9.629,0,0,1-6.893-2.7,9.133,9.133,0,0,1,0-13.234,10.041,10.041,0,0,1,13.853,0,8.986,8.986,0,0,1,0,13.234A9.712,9.712,0,0,1,105.5,281.609Z" fill="#fff" opacity="0"/>
+      <path id="Path_16" data-name="Path 16" d="M213.561,280.084H195.99l-46.29-73.03a32.678,32.678,0,0,1-2.906-5.751h-.406a104.841,104.841,0,0,1,.541,13.65v65.132H131.386v-99.36H150.1l44.737,71.3q2.838,4.435,3.649,6.1h.27a90.533,90.533,0,0,1-.676-13.373V180.724h15.476Z" fill="#fff" opacity="0"/>
+      <path id="Path_17" data-name="Path 17" d="M289.251,280.084h-54.4v-99.36h52.238v14H250.935v28.131h33.316v13.927H250.935v29.378h38.316Z" fill="#fff" opacity="0"/>
+      <path id="Path_18" data-name="Path 18" d="M366.565,194.721H338.722v85.363H322.638V194.721H294.863v-14h71.7Z" fill="#fff" opacity="0"/>
+      <g id="Group_126" data-name="Group 126" transform="translate(-11.277)">
+        <path id="Path_19" data-name="Path 19" d="M88,34.057H67.218L26.753-32.322V34.057H5.967V-66.828H26.753L67.288-.311V-66.828H88Z" transform="translate(143.419 247.552)" fill="#1fd9cd"/>
+        <path id="Path_20" data-name="Path 20" d="M23.2-34,32.936-51.9h12.3L30.12-26.163,45.625,0H33.185L23.2-18.179,13.224,0H.784L16.29-26.163,1.176-51.9h12.3Zm67.6-9.232h-15.9V0H64.213V-43.237H48.529V-51.9H90.8Z" transform="translate(252.066 232.623)" fill="#1fd9cd"/>
+        <g id="Mask_Group_6" data-name="Mask Group 6" transform="translate(251.283 243.488)" clip-path="url(#clip-path)">
+          <path id="puzzle" d="M66.07,48.581l4.38-4.38-4.38-4.38L55.136,50.756,19.694,15.314,30.629,4.38,26.249,0l-4.38,4.38L17.489,0,10.935,6.555l-4.38-4.38-4.38,4.38,4.38,4.38L0,17.489l4.38,4.38L0,26.249l4.38,4.38L15.314,19.694,50.756,55.136,39.821,66.07l4.38,4.38,4.38-4.38,4.38,4.38L59.516,63.9l4.38,4.38,4.38-4.38-4.38-4.38,6.555-6.555Z" transform="translate(-4.735 19.239) rotate(-45)" fill="#1ed0c5"/>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>

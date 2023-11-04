@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:redraven.Models"
+             xmlns:contentViews="clr-namespace:redraven.ContentViews"
+             xmlns:converters="clr-namespace:redraven.Converters"
+             xmlns:converters1="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:viewModels="clr-namespace:redraven.ViewModels"
+             x:Class="redraven.Views.ProgrammeManagerPage"
+             Title="ProgrammeManagerPage"
+             x:DataType="viewModels:ProgrammeManagerViewModel"
+             Shell.NavBarIsVisible="False"
+>
+    <ContentPage.Resources>
+        <converters:ProgrammeToWeeklyLift x:Key="ProgrammeToWeeklyLift"></converters:ProgrammeToWeeklyLift>
+        <converters:ProgrammeToWeeklyCalories x:Key="ProgrammeToWeeklyCalories"></converters:ProgrammeToWeeklyCalories>
+        <converters:ProgrammeToWeeklyTime x:Key="ProgrammeToWeeklyTime"></converters:ProgrammeToWeeklyTime>
+        <converters1:InvertedBoolConverter x:Key="InvertedBool"></converters1:InvertedBoolConverter>
+        <converters:TrainingDayToSummaryString x:Key="TrainingDayToSummaryString"></converters:TrainingDayToSummaryString>
+    </ContentPage.Resources>
+    <Grid Margin="30,0">
+        <Grid x:Name="CurrentProgrammeGrid" BindingContext="{Binding Path=SelectedProgramme}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <VerticalStackLayout Grid.Row="0" x:DataType="models:Programme">
+                <Label Margin="0,20,0,0"
+                       HorizontalOptions="Start"
+                       Style="{DynamicResource SubHeadingLabelOnPage}"
+                       Text="Your current programme" />
+                <Label Margin="0,-4,0,0"
+                       HorizontalOptions="Start"
+                       Style="{DynamicResource HeadingLabelOnPage}"
+                       Text="{Binding Name}" />
+            </VerticalStackLayout>
+
+            <Grid Grid.Row="1" VerticalOptions="Start" HorizontalOptions="Center">
+                <HorizontalStackLayout Spacing="40" Margin="0,30">
+                    <contentViews:VerticalBadgeIconText
+                        ImageSource="weight_kilogram.png"
+                        x:Name="WeeklyWeightIconText"
+                        TitleText="{Binding Converter={StaticResource ProgrammeToWeeklyLift}}"
+                        DescriptionText="weekly lift"
+                        IsBadgeVisible="False"></contentViews:VerticalBadgeIconText>
+                    <contentViews:VerticalBadgeIconText 
+                        ImageSource="fire.png"
+                        x:Name="WeeklyCaloriesIconText"
+                        TitleText="{Binding Converter={StaticResource ProgrammeToWeeklyCalories}}"
+                        DescriptionText="weekly burnt"
+                        IsBadgeVisible="False"></contentViews:VerticalBadgeIconText>
+                    <contentViews:VerticalBadgeIconText 
+                        ImageSource="timer.png"
+                        x:Name="WeeklyTimeIconText"
+                        TitleText="{Binding Converter={StaticResource ProgrammeToWeeklyTime}}"
+                        DescriptionText="weekly time"
+                        IsBadgeVisible="false"></contentViews:VerticalBadgeIconText>
+                </HorizontalStackLayout>
+            </Grid>
+
+            <Border Margin="-30,0" Grid.Row="2" Style="{DynamicResource ContentHolderBorder}">
+                <Border.Shadow>
+                    <Shadow Brush="{DynamicResource Surface}"
+                            Offset="0,-20"
+                            Radius="40"
+                            Opacity="0.8" />
+                </Border.Shadow>
+                <CollectionView x:DataType="models:Programme" x:Name="TrainingDayCollectionView" ItemsSource="{Binding TrainingWeeks[0].TrainingDays}" SelectionChanged="TrainingDayCollectionView_OnSelectionChanged" SelectionMode="Single">
+                    <CollectionView.Header>
+                        <StackLayout HeightRequest="12" BackgroundColor="Transparent">
+                        </StackLayout>
+                    </CollectionView.Header>
+                    <CollectionView.Footer>
+                        <StackLayout HeightRequest="112" BackgroundColor="Transparent"/>
+                    </CollectionView.Footer>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:TrainingDay">
+                            <Grid>
+                                <contentViews:InfoHolderListItem 
+                                Margin="26,20,26,0"
+                                InfoSmallBoxText="{Binding DayOfWeekInt}"
+                                IsImageVisible1="False"
+                                TitleText="{Binding Name}"
+                                DescriptionText="{Binding Converter={StaticResource TrainingDayToSummaryString}}"
+                                IsRightChevronVisible="{Binding Path=IsChecked, Source={x:Reference RearrangeProgrammeCheckBox}, Converter={StaticResource InvertedBool}}">
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup Name="CommonStates">
+                                            <VisualState Name="Normal"></VisualState>
+                                            <VisualState Name="Selected">
+                                                <VisualState.Setters>
+                                                    <Setter Property="BackgroundColor" Value="Transparent"></Setter>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+                                    </VisualStateManager.VisualStateGroups>
+                                </contentViews:InfoHolderListItem>
+
+                                <VerticalStackLayout Spacing="8" HorizontalOptions="End" VerticalOptions="Center" Margin="0,0,26,-13" IsVisible="{Binding Path=IsChecked, Source={x:Reference RearrangeProgrammeCheckBox}}">
+                                    <Grid WidthRequest="24" HeightRequest="24">
+                                        <Image WidthRequest="24" Source="menu_up.png" HorizontalOptions="Center" VerticalOptions="Center">
+                                            <Image.Behaviors>
+                                                <converters1:IconTintColorBehavior TintColor="White" />
+                                            </Image.Behaviors>
+                                        </Image>
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding MoveTrainingDayPlanUpCommand, Source={RelativeSource AncestorType={x:Type viewModels:ProgrammeManagerViewModel}}}" CommandParameter="{Binding}"/>
+                                        </Grid.GestureRecognizers>
+                                    </Grid>
+                                    <Grid WidthRequest="24" HeightRequest="24">
+                                        <Image WidthRequest="24" Source="menu_down.png" HorizontalOptions="Center" VerticalOptions="Center">
+                                            <Image.Behaviors>
+                                                <converters1:IconTintColorBehavior TintColor="White" />
+                                            </Image.Behaviors>
+                                        </Image>
+                                        <Grid.GestureRecognizers>
+                                            <TapGestureRecognizer  Command="{Binding MoveTrainingDayPlanDownCommand, Source={RelativeSource AncestorType={x:Type viewModels:ProgrammeManagerViewModel}}}" CommandParameter="{Binding}"/>
+                                        </Grid.GestureRecognizers>
+                                    </Grid>
+                                </VerticalStackLayout>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </Border>
+
+            <!--<Button x:Name="AddNewWeekButton" IsVisible="False" Clicked="AddNewWeekButton_OnClicked"  Text="Add New Week" Grid.Row="1" HeightRequest="50" HorizontalOptions="Fill" Margin="30,0,30,88" VerticalOptions="End"></Button>-->
+
+            <Grid Grid.Row="2"  Margin="0,0,0,30" ColumnSpacing="12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <contentViews:ToggleIconTextButton  x:Name="RearrangeProgrammeCheckBox" VerticalOptions="End" HorizontalOptions="Start" Text="Rearrange" IconSource="up_down.png" Margin="-2,0,0,-1"/>
+                <contentViews:PrimaryIconTextButton Grid.Column="1" x:Name="SaveProgrammeButton" ButtonOnClicked="SaveProgrammeButton_OnButtonOnClicked" HorizontalOptions="Fill" VerticalOptions="End" Text="Save routine" ImageSource="dumbbell.png"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentPage>
