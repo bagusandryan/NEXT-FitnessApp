@@ -11,6 +11,9 @@ templatesTest/
 /Resources/**/*.json
 /Resources/**/*.ttf
 /Resources/Images
+/ViewModels
+
+# User-specific files
 *.rsuser
 *.suo
 *.user
