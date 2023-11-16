@@ -28,9 +28,9 @@ public partial class ProgrammeManagerPage : ContentPage
     }
 
     //Can't get this to work using EventToCommand
-    private void TrainingDayCollectionView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    private async void TrainingDayCollectionView_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        _viewModel.TrainingDaySelectionChanged(TrainingDayCollectionView);
+        await _viewModel.TrainingDaySelectionChanged(TrainingDayCollectionView);
     }
 
     private void SaveProgrammeButton_OnButtonOnClicked(object sender, EventArgs e)

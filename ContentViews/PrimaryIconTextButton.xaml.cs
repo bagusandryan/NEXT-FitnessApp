@@ -32,9 +32,8 @@ public partial class PrimaryIconTextButton : ContentView
         InitializeComponent();
     }
 
-    private void PrimaryIconTextButton_OnLoaded(object sender, EventArgs e)
+    void ClickGestureRecognizer_OnClicked(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
     {
-        ButtonUI.Clicked -= ButtonOnClicked;
-        ButtonUI.Clicked += ButtonOnClicked;
+        ButtonOnClicked.Invoke(sender, e);
     }
 }

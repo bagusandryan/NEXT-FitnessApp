@@ -64,6 +64,8 @@
                 </Border>
                 <Image Grid.RowSpan="2" Grid.ColumnSpan="2"
                        HorizontalOptions="Start"
+                       HeightRequest="270"
+                       WidthRequest="235"
                        x:Name="UserProfileImage"
                        Source="{Binding SelectedUser.ProfilePictureFileName}"
                        Margin="{Binding SelectedUser.ProfilePictureMargin, Converter={StaticResource DoubleArrayToThickness}}"/>

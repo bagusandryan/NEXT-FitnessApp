@@ -1,9 +1,19 @@
-<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+﻿<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="redraven.ContentViews.PrimaryIconTextButton"
-             x:Name="This"
-             Loaded="PrimaryIconTextButton_OnLoaded">
-    <Button CornerRadius="30" Padding="30,12" x:Name="ButtonUI" BindingContext="{x:Reference This}" TextColor="{DynamicResource Surface}" HorizontalOptions="{Binding HorizontalOptions, Source={x:Reference This}}" Background="{DynamicResource Primary}" WidthRequest="{Binding ButtonWidth}" Text="{Binding Text}" ImageSource="{Binding ImageSource}"
-            ContentLayout="Left, 8">
-    </Button>
+             x:Name="This">
+     <Frame x:Name="BorderContent" HorizontalOptions="Fill" VerticalOptions="End" Padding="20,14" Background="{DynamicResource Primary}" BorderColor="Transparent" CornerRadius="24">
+        <HorizontalStackLayout BindingContext="{x:Reference This}" HorizontalOptions="Center">
+            <Image Source="{Binding ImageSource}" HeightRequest="20" Margin="0,0,8,0">
+                <Image.Behaviors>
+                    <behaviors:IconTintColorBehavior TintColor="{Binding Source={x:Reference ToggleLabel}, Path=TextColor}" />
+                </Image.Behaviors>
+            </Image>
+            <Label x:Name="ToggleLabel" HorizontalOptions="Start" VerticalOptions="Center" Text="{Binding Text}" TextColor="{DynamicResource Surface}"></Label>
+        </HorizontalStackLayout>
+    </Frame>
+    <ContentView.GestureRecognizers>
+        <TapGestureRecognizer Tapped="ClickGestureRecognizer_OnClicked"/>
+    </ContentView.GestureRecognizers>
+
 </ContentView>

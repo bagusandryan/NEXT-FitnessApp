@@ -117,8 +117,11 @@
                     </Border>
                     <Image Grid.RowSpan="2" Grid.ColumnSpan="2"
                        HorizontalOptions="Start"
+                       HeightRequest="270"
+                       WidthRequest="235"
                        Margin="{Binding User.ProfilePictureMargin, Converter={StaticResource DoubleArrayToThickness}}"
-                       Source="{Binding User.ProfilePictureFileName}"/>
+                       x:Name="UserImage"
+                       />
                     <ImageButton Margin="0,0,28,42" Grid.Column="1" Grid.RowSpan="3" x:Name="StartTrainingDayButton" VerticalOptions="End" HorizontalOptions="End" Background="{DynamicResource PrimaryBrush}" HeightRequest="60" WidthRequest="60" Source="dumbbell.png" Aspect="Center" Command="{Binding StartCurrentTrainingDayCommand}">
                         <ImageButton.Clip>
                             <EllipseGeometry Center="30,30"

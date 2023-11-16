@@ -87,8 +87,8 @@
                                     <ColumnDefinition Width="70"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-                                <Label VerticalOptions="Center" Style="{DynamicResource SubHeadingLabelOnPage}" x:Name="ExerciseLabel" Grid.ColumnSpan="4" Text="{Binding Exercise.Name}"></Label>
-                                <HorizontalStackLayout Margin="-8,0,0,0" Grid.Row="1" Grid.Column="0" Padding="8">
+                                <Label Margin="{OnPlatform Android='0', iOS='28,20,0,0'}" VerticalOptions="Center" Style="{DynamicResource SubHeadingLabelOnPage}" x:Name="ExerciseLabel" Grid.ColumnSpan="4" Text="{Binding Exercise.Name}"></Label>
+                                <HorizontalStackLayout Margin="{OnPlatform Android='-8,0,0,0', iOS='20,0,0,0'}"  Grid.Row="1" Grid.Column="0" Padding="8">
                                     <HorizontalStackLayout.GestureRecognizers>
                                         <TapGestureRecognizer  Command="{Binding EditSetCommand, Source={RelativeSource AncestorType={x:Type viewModels:TrainingDayEditorViewModel}}}" CommandParameter="{Binding}"/>
                                     </HorizontalStackLayout.GestureRecognizers>
@@ -105,7 +105,7 @@
                                                    Style="{DynamicResource SubHeadingDescriptionLabel}" 
                                                    FontFamily="OpenSansRegular"/>
                                 </HorizontalStackLayout>
-                                <HorizontalStackLayout Margin="-8,0,0,0" Grid.Row="1" Grid.Column="2" Padding="8">
+                                <HorizontalStackLayout Margin="{OnPlatform Android='-8,0,0,0', iOS='20,0,0,0'}" Grid.Row="1" Grid.Column="2" Padding="8">
                                     <HorizontalStackLayout.GestureRecognizers>
                                         <TapGestureRecognizer  Command="{Binding EditWeightCommand, Source={RelativeSource AncestorType={x:Type viewModels:TrainingDayEditorViewModel}}}" CommandParameter="{Binding}"/>
                                     </HorizontalStackLayout.GestureRecognizers>
@@ -121,7 +121,7 @@
                                                    Style="{DynamicResource SubHeadingDescriptionLabel}" 
                                                    FontFamily="OpenSansRegular"/>
                                 </HorizontalStackLayout>
-                                <HorizontalStackLayout Margin="-8,0,0,0" Grid.Row="1" Grid.Column="1" Padding="8">
+                                <HorizontalStackLayout Margin="{OnPlatform Android='-8,0,0,0', iOS='20,0,0,0'}"  Grid.Row="1" Grid.Column="1" Padding="8">
                                     <HorizontalStackLayout.GestureRecognizers>
                                         <TapGestureRecognizer  Command="{Binding EditRepCommand, Source={RelativeSource AncestorType={x:Type viewModels:TrainingDayEditorViewModel}}}" CommandParameter="{Binding}"/>
                                     </HorizontalStackLayout.GestureRecognizers>
@@ -137,7 +137,7 @@
                                                    Style="{DynamicResource SubHeadingDescriptionLabel}" 
                                                    FontFamily="OpenSansRegular"/>
                                 </HorizontalStackLayout>
-                                <HorizontalStackLayout Margin="-8,0,0,0" Grid.Row="1" Grid.Column="3" Padding="8">
+                                <HorizontalStackLayout Margin="{OnPlatform Android='-8,0,0,0', iOS='20,0,0,0'}" Grid.Row="1" Grid.Column="3" Padding="8">
                                     <HorizontalStackLayout.GestureRecognizers>
                                         <TapGestureRecognizer  Command="{Binding EditRestTimerCommand, Source={RelativeSource AncestorType={x:Type viewModels:TrainingDayEditorViewModel}}}" CommandParameter="{Binding}"/>
                                     </HorizontalStackLayout.GestureRecognizers>
@@ -153,7 +153,7 @@
                                                    Style="{DynamicResource SubHeadingDescriptionLabel}" 
                                                    FontFamily="OpenSansRegular"/>
                                 </HorizontalStackLayout>
-                                <Grid Margin="0,0,-4,0" RowSpan="2" ColumnSpan="5" HorizontalOptions="End" VerticalOptions="Center" IsVisible="{Binding Path=IsChecked, Source={x:Reference RearrangeCheckBox}, Converter={StaticResource InvertedBool}}">
+                                <Grid Margin="{OnPlatform Android='0,0,-4,0', iOS='0,0,20,0'}" RowSpan="2" ColumnSpan="5" HorizontalOptions="End" VerticalOptions="Center" IsVisible="{Binding Path=IsChecked, Source={x:Reference RearrangeCheckBox}, Converter={StaticResource InvertedBool}}">
                                     <Image WidthRequest="24" Source="delete.png" HorizontalOptions="Center" VerticalOptions="Center">
                                         <Image.GestureRecognizers>
                                             <TapGestureRecognizer  Command="{Binding DeleteExercisePlanCommand, Source={RelativeSource AncestorType={x:Type viewModels:TrainingDayEditorViewModel}}}" CommandParameter="{Binding}"/>
@@ -198,7 +198,7 @@
             </Grid>
         </Border>
 
-        <Grid Grid.Row="2"  Margin="0,0,0,30" ColumnSpacing="12">
+        <Grid Grid.Row="2"  Margin="0,0,0,30" ColumnSpacing="12" VerticalOptions="End">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>

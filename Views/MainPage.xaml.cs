@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using CommunityToolkit.Maui.Behaviors;
 using CommunityToolkit.Maui.Core;
 using Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;
@@ -26,6 +27,8 @@ public partial class MainPage : ContentPage
     protected override async void OnNavigatedTo(NavigatedToEventArgs args)
     {
         App.Current.On<Microsoft.Maui.Controls.PlatformConfiguration.Android>().UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);
+
+        UserImage.Source = File.Exists(_viewModel.User.ProfilePictureFileName) ? _viewModel.User.ProfilePictureFileName : Path.Combine(FileSystem.Current.CacheDirectory, Path.GetFileName(_viewModel.User.ProfilePictureFileName)); ;
     }
 
     private async void PastWorkoutClicked(object sender, TappedEventArgs e)

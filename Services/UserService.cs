@@ -66,7 +66,7 @@ namespace redraven.Services
 
             //move this to AppDataDirectory
             using var stream = await images.OpenReadAsync();
-            string targetFileName = DateTimeOffset.Now.ToUnixTimeSeconds() + images.FileName;
+            string targetFileName = DateTimeOffset.Now.ToUnixTimeSeconds() + images.FileName.ToLower();
             string targetFile = Path.Combine(UserDirectory.GetUserProfilePicturesDirectory(), targetFileName);
             // Copy the file to the AppDataDirectory
             using FileStream outputStream = File.Create(targetFile);
