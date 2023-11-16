@@ -30,7 +30,7 @@
                                                           CommandParameter="{Binding Source={x:Reference NameEntry}}"></behaviors:EventToCommandBehavior>
                     </Entry.Behaviors>
                 </Entry>
-                <Border Margin="0,-8,0,0" BackgroundColor="{DynamicResource Primary}" Stroke="Transparent" HeightRequest="8" StrokeShape="RoundRectangle 10">
+                <Border Margin="{OnPlatform Android='0,-8,0,0', iOS='0'}" BackgroundColor="{DynamicResource Primary}" Stroke="Transparent" HeightRequest="{OnPlatform Android='8', iOS='4'}" StrokeShape="RoundRectangle 10">
                 </Border>
             </VerticalStackLayout>
             <Grid x:Name="ProgrammeStackLayout" RowSpacing="50" HorizontalOptions="Fill" VerticalOptions="Start" Margin="0,0,0,30">

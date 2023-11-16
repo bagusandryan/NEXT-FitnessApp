@@ -1,10 +1,13 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using redraven.Models;
 
 namespace redraven.Services
 {
     public class ProgrammeService
     {
+        string _userSelectedProgrammeFileName = Path.Combine(FileSystem.AppDataDirectory, "user_programme.json");
+
         private Programme _selectedProgramme;
         private ExerciseService _exerciseService;
 
@@ -22,11 +25,20 @@ namespace redraven.Services
 
         public async Task LoadCurrentProgramme()
         {
-            if (File.Exists(MauiProgram.UserSelectedProgramme) && _selectedProgramme == null)
+            if (File.Exists(_userSelectedProgrammeFileName) && _selectedProgramme == null)
             {
-                _selectedProgramme =
-                    JsonConvert.DeserializeObject<Programme>(
-                        await File.ReadAllTextAsync(MauiProgram.UserSelectedProgramme));
+                string jsonString = await File.ReadAllTextAsync(_userSelectedProgrammeFileName);
+                JObject elements = JObject.Parse(jsonString);
+                if(elements.ContainsKey("Result"))
+                {
+                    //iOS somehow wraps the JSON with Task properties result 
+                    _selectedProgramme = JsonConvert.DeserializeObject<Programme>(elements["Result"].ToString());
+                }
+                else
+                {
+                    _selectedProgramme = JsonConvert.DeserializeObject<Programme>(jsonString);
+                }
+
                 await LoadExercisesInCurrentProgramme();
             }
         }
@@ -53,6 +65,11 @@ namespace redraven.Services
                 await LoadCurrentProgramme();
             }
             return _selectedProgramme;
+        }
+
+        public string GetUserSelectedProgrammeFileName()
+        {
+            return _userSelectedProgrammeFileName;
         }
     }
 }

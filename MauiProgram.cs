@@ -10,7 +10,6 @@ namespace redraven;
 
 public static class MauiProgram
 {
-    public static readonly string UserSelectedProgramme = Path.Combine(FileSystem.AppDataDirectory, "user_programme.json");
     public static readonly string SeparatorText = " ● ";
     public static double UserBodyWeight = 40;
 
